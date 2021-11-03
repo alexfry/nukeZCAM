@@ -1,0 +1,1181 @@
+set cut_paste_input [stack 0]
+version 13.0 v3
+push $cut_paste_input
+Group {
+ name ZCAM
+ label "\[value direction]\n0.0.1"
+ selected true
+ xpos 705
+ ypos 32
+ addUserKnob {20 ZCAM}
+ addUserKnob {4 direction M {forward inverse}}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 _1 l _SURROUND_PARAMETERS}
+ addUserKnob {41 surrounds T Constants.surrounds}
+ addUserKnob {41 c T Constants.c}
+ addUserKnob {41 Nc T Constants.Nc}
+ addUserKnob {41 F T Constants.F}
+ addUserKnob {41 FLL T Constants.FLL}
+ addUserKnob {26 _2 l _DEFAULT_CONDITIONS}
+ addUserKnob {41 La T Constants.La}
+ addUserKnob {41 Yb T Constants.Yb}
+ addUserKnob {41 surround T Constants.surround}
+ addUserKnob {41 D T Constants.D}
+ addUserKnob {41 Dtype T Constants.Dtype}
+ addUserKnob {26 ""}
+ addUserKnob {41 xyzw_d65 T Constants.xyzw_d65}
+ addUserKnob {41 xyzw T Constants.xyzw}
+ addUserKnob {26 ""}
+ addUserKnob {41 Yw T Constants.Yw}
+ addUserKnob {41 FL T Constants.FL}
+ addUserKnob {41 n T Constants.n}
+ addUserKnob {41 Fb T Constants.Fb}
+ addUserKnob {41 Fs T Constants.Fs}
+ addUserKnob {26 ""}
+ addUserKnob {41 xyzwc T Constants.xyzwc}
+ addUserKnob {41 iabzw T Constants.iabzw}
+ addUserKnob {41 Qw T Constants.Qw}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x71c67100
+  label xyz_to_jabz
+  note_font_size 42
+  xpos -1063
+  ypos -50
+  bdwidth 255
+  bdheight 678
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x388e8e00
+  label Forward
+  note_font_size 42
+  xpos -1278
+  ypos 673
+  bdwidth 1634
+  bdheight 582
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x388e8e00
+  label Inverse
+  note_font_size 42
+  xpos -2310
+  ypos 2374
+  bdwidth 1157
+  bdheight 936
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0x388e8e00
+  label "jabz to xyz"
+  note_font_size 42
+  xpos -2260
+  ypos 3390
+  bdwidth 300
+  bdheight 667
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode5
+  label "h,H,Q,J,M,C,Sz,Vz,Kz,Wz\n\n        :outin:\n            | 'J,aM,bM', optional\n            | String with requested output (e.g. \"J,aM,bM,M,h\") \[Forward mode]\n            | - attributes: 'J': lightness,'Q': brightness,\n            |               'M': colorfulness,'C': chroma, 's': saturation,\n            |               'h': hue angle, 'H': hue quadrature/composition,\n            |               'Wz': whiteness, 'Kz':blackness, 'Sz': saturation, 'V': vividness\n            | String with inputs in data \[inverse mode]. \n            | Input must have data.shape\[-1]==3 and last dim of data must have \n            | the following structure for inverse mode: \n            |  * data\[...,0] = J or Q,\n            |  * data\[...,1:] = (aM,bM) or (aC,bC) or (aS,bS) or (M,h) or (C, h), ..."
+  xpos -1922
+  ypos 791
+  bdwidth 411
+  bdheight 201
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos -984
+  ypos -137
+ }
+ Dot {
+  name Dot4
+  label xyzc
+  xpos -950
+  ypos -97
+ }
+ Dot {
+  name Dot5
+  xpos -950
+  ypos -21
+ }
+set Ncfc2fc00 [stack 0]
+ ColorMatrix {
+  matrix {
+      {{b} 0 {1-b}}
+      {{1-g} {g} 0}
+      {0 0 1}
+    }
+  name M_to_xyzp
+  label " # Setup X,Y,Z to X',Y',Z' transform as matrix:\n    b = 1.15 \n    g = 0.66\n\n    M_to_xyzp = np.array(\[\[b, 0, 1 - b],\[1 - g, g, 0],\[0, 0, 1]])"
+  xpos -984
+  ypos 30
+  addUserKnob {20 User}
+  addUserKnob {7 b}
+  b 1.15
+  addUserKnob {7 g}
+  g 0.66
+ }
+ ColorMatrix {
+  matrix {
+      {0.41478972 0.579999 0.014648}
+      {-0.20151 1.120649 0.0531008}
+      {-0.0166008 0.2648 0.6684799}
+    }
+  name _M_XYZP_TO_LMS
+  label "# Define X',Y',Z' to L,M,S conversion matrix:"
+  xpos -984
+  ypos 102
+ }
+ Dot {
+  name Dot1
+  label LMS
+  xpos -950
+  ypos 154
+ }
+ Expression {
+  expr0 "((c1 + c2*(r/10000)**n)/(1 + c3*(r/10000)**n))**p"
+  expr1 "((c1 + c2*(g/10000)**n)/(1 + c3*(g/10000)**n))**p"
+  expr2 "((c1 + c2*(b/10000)**n)/(1 + c3*(b/10000)**n))**p"
+  name Expression1
+  label "# response compression: lms to lms'"
+  xpos -984
+  ypos 198
+  addUserKnob {20 _PQ_PARAMETERS}
+  addUserKnob {7 c1}
+  c1 {{3424/2**12}}
+  addUserKnob {7 c2}
+  c2 {{2413/2**7}}
+  addUserKnob {7 c3}
+  c3 {{2392/2**7}}
+  addUserKnob {7 n}
+  n {{2610/2**14}}
+  addUserKnob {7 p}
+  p {{1.7*2523/2**5}}
+ }
+ Dot {
+  name Dot2
+  label lmsp
+  xpos -950
+  ypos 260
+ }
+set Ncfc2e800 [stack 0]
+ ColorMatrix {
+  matrix {
+      {0 1 0}
+      {3.524 -4.066708 0.542708}
+      {0.199076 1.096799 -1.295875}
+    }
+  name _M_LMSP_TO_IAB_ZCAM
+  xpos -912
+  ypos 329
+ }
+ Add {
+  value -3.703522621e-11
+  name Add1
+  label "Iabz\[...,0]-=epsilon # correct to ensure zero output"
+  xpos -912
+  ypos 353
+ }
+ Dot {
+  name Dot6
+  label Iabz
+  xpos -878
+  ypos 411
+ }
+push $Ncfc2e800
+ ColorMatrix {
+  matrix {
+      {0.5 0.5 0}
+      {3.524 -4.066708 0.542708}
+      {0.199076 1.096799 -1.295875}
+    }
+  name _M_LMSP_TO_IAB_JABZ
+  xpos -1053
+  ypos 328
+ }
+ Dot {
+  name Dot7
+  label Iabz
+  xpos -1019
+  ypos 410
+ }
+ Switch {
+  inputs 2
+  which 1
+  name use_zcam_parameters
+  xpos -978
+  ypos 441
+ }
+set Ncfc2ab00 [stack 0]
+ Expression {
+  expr0 "((1-0.56)*r/(1-0.56*r)) - 1.6295499532821566e-11"
+  name Expression2
+  label "    if ztype == 'jabz':\n        Iabz\[...,0] = ((1-0.56)*Iabz\[...,0]/(1-0.56*Iabz\[...,0])) - 1.6295499532821566e-11\n        print(\"Iabz post jabz: \", Iabz)"
+  xpos -886
+  ypos 492
+ }
+push $Ncfc2ab00
+ Switch {
+  inputs 2
+  name use_zcam_parameters1
+  label "# convert Iabz' to Jabz coordinates:\n    if ztype == 'jabz':"
+  xpos -978
+  ypos 564
+ }
+ Dot {
+  name Dot3
+  label iabz
+  xpos -944
+  ypos 753
+ }
+set Ncfc2cc00 [stack 0]
+ Expression {
+  temp_name0 r2d
+  temp_expr0 180.0/pi
+  temp_name1 h360
+  temp_expr1 "360.0\n"
+  temp_name2 h
+  temp_expr2 atan2(b,g)*r2d
+  channel0 rgba
+  expr0 h
+  name h
+  xpos -1074
+  ypos 904
+ }
+set Ncfc2c800 [stack 0]
+ Expression {
+  temp_name0 h
+  temp_expr0 r
+  channel0 rgba
+  expr0 "1.015 + cos((h + 89.038)*pi/180)"
+  name ez
+  xpos -1074
+  ypos 928
+ }
+push $Ncfc2cc00
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.red
+  name Copy1
+  xpos -894
+  ypos 989
+ }
+ Expression {
+  channel0 rgba
+  expr0 "100*((g**2.0 + b**2.0)**0.37)*(r**0.068)*(Constants.FL**0.2) / ((Constants.iabzw.r**0.78) * (Constants.Fb**0.1))"
+  name M_colorfulness
+  label "# calculate colorfulness, M:"
+  xpos -894
+  ypos 1021
+ }
+set Ncfbc7800 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 100*r/Constants.Qw
+  name C
+  label "# calculate chroma, C:"
+  xpos -894
+  ypos 1118
+ }
+set Ncfbc7400 [stack 0]
+push $Ncfc2cc00
+ Expression {
+  channel0 rgba
+  expr0 "2700 * (r**(1.6*Constants.Fs/(Constants.Fb**0.12))) * (Constants.Fs**2.2) * (Constants.Fb**0.5) * (Constants.FL**0.2)"
+  name Q
+  label "# calculate brightness, Q:"
+  xpos -1030
+  ypos 1019
+ }
+set Ncfbc7000 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 "100.0 * (r/Constants.Qw)"
+  name J
+  label "# calculate lightness, J:"
+  xpos -1030
+  ypos 1117
+ }
+set Ncfbc6c00 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy3
+  xpos -1030
+  ypos 1155
+ }
+set Ncfbc6800 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 "100 - ((100-r)**2 + g**2)**0.5"
+  name Wz
+  label "# calculate whiteness, W:"
+  xpos -1030
+  ypos 1195
+ }
+set Ncfbc6400 [stack 0]
+add_layer {zcam zcam.J zcam.Q zcam.M zcam.C}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 zcam.J 0 0 black -1 -1 zcam.Q 0 1 black -1 -1 zcam.M 0 2 black -1 -1 zcam.C 0 3"
+  name Shuffle2
+  xpos -1202
+  ypos 1199
+ }
+push $Ncfc2c800
+ Dot {
+  name Dot9
+  label h
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1975
+  ypos 2339
+ }
+push $Ncfbc6c00
+ Grade {
+  multiply 0.5
+  name Grade2
+  xpos -1030
+  ypos 1314
+  disable true
+ }
+ ColorLookup {
+  lut {master {curve C -1.408769725 k x342.8180237 100 s0}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  name ColorLookup1
+  xpos -1030
+  ypos 1338
+ }
+push $Ncfc2cc00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+  name Iz
+  xpos -1127
+  ypos 835
+ }
+push $Ncfc2cc00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.green 0 1 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.green 0 1 rgba.alpha 0 3"
+  name az
+  xpos -978
+  ypos 837
+ }
+push $Ncfc2cc00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.blue 0 2 rgba.blue 0 2 rgba.blue 0 2 rgba.red 0 0 rgba.blue 0 2 rgba.green 0 1 rgba.blue 0 2 rgba.alpha 0 3"
+  name bz
+  xpos -825
+  ypos 835
+ }
+ NoOp {
+  inputs 0
+  name Constants
+  xpos -527
+  ypos 180
+  addUserKnob {20 User}
+  addUserKnob {26 _1 l _SURROUND_PARAMETERS}
+  addUserKnob {4 surrounds M {average dim dark}}
+  addUserKnob {7 c}
+  c {{curve(surrounds) 0.69 0.59 0.525}}
+  addUserKnob {7 Nc}
+  Nc {{curve(surrounds) 1 0.9 0.8}}
+  addUserKnob {7 F}
+  F {{curve(surrounds) 1 0.9 0.8}}
+  addUserKnob {7 FLL}
+  FLL {{curve(surrounds) 1 1 1}}
+  addUserKnob {26 _2 l _DEFAULT_CONDITIONS}
+  addUserKnob {7 La}
+  La 100
+  addUserKnob {7 Yb}
+  Yb 20
+  addUserKnob {4 surround M {avg dim dark}}
+  addUserKnob {7 D}
+  D 1
+  addUserKnob {7 Dtype}
+  addUserKnob {26 ""}
+  addUserKnob {18 xyzw_d65}
+  xyzw_d65 {95.043 100 108.89}
+  addUserKnob {6 xyzw_d65_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 xyzw}
+  xyzw {{xyzw_d65.r} {xyzw_d65.g} {xyzw_d65.b}}
+  addUserKnob {6 xyzw_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {26 ""}
+  addUserKnob {7 Yw}
+  Yw 100
+  addUserKnob {7 FL}
+  FL {{"0.171 * La**(1/3) * (1 - exp(-48/9*La))"}}
+  addUserKnob {7 n}
+  n {{Yb/Yw}}
+  addUserKnob {7 Fb}
+  Fb {{n**0.5}}
+  addUserKnob {7 Fs}
+  Fs {{c}}
+  addUserKnob {26 ""}
+  addUserKnob {18 xyzwc}
+  xyzwc {95.043 100 108.89}
+  addUserKnob {6 xyzwc_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 iabzw}
+  iabzw {0.31331 -0.00014318 -8.9369e-05}
+  addUserKnob {6 iabzw_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {7 Qw}
+  Qw 185.85
+ }
+push $Ncfc2fc00
+push $Ncfc2c800
+push $Ncfbc7800
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy5
+  xpos -367
+  ypos 1141
+ }
+set Ncfbc5800 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r*sin(g*pi/180.0)
+  name bM
+  xpos -271
+  ypos 1203
+ }
+add_layer {zcam_bM zcam_bM.red zcam_bM.green zcam_bM.blue zcam_bM.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_bM
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_bM.red 0 0 rgba.green 0 1 zcam_bM.green 0 1 rgba.blue 0 2 zcam_bM.blue 0 2 rgba.alpha 0 3 zcam_bM.alpha 0 3"
+  name Shuffle11
+  xpos -1154
+  ypos 1398
+ }
+push $Ncfbc5800
+ Expression {
+  channel0 rgba
+  expr0 r*cos(g*pi/180.0)
+  name aM
+  xpos -367
+  ypos 1204
+ }
+add_layer {zcam_aM zcam_aM.red zcam_aM.green zcam_aM.blue zcam_aM.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_aM
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_aM.red 0 0 rgba.green 0 1 zcam_aM.green 0 1 rgba.blue 0 2 zcam_aM.blue 0 2 rgba.alpha 0 3 zcam_aM.alpha 0 3"
+  name Shuffle10
+  xpos -1250
+  ypos 1398
+ }
+push $Ncfbc6800
+ Expression {
+  channel0 rgba
+  expr0 "((r - 58)**2 + 3.4*g**2)**0.5"
+  name Vz
+  label "# calculate vividness, V:"
+  xpos -583
+  ypos 1200
+ }
+add_layer {zcam_Vz zcam_Vz.red zcam_Vz.green zcam_Vz.blue zcam_Vz.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_Vz
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_Vz.red 0 0 rgba.green 0 1 zcam_Vz.green 0 1 rgba.blue 0 2 zcam_Vz.blue 0 2 rgba.alpha 0 3 zcam_Vz.alpha 0 3"
+  name Shuffle9
+  xpos -1345
+  ypos 1396
+ }
+push $Ncfbc7000
+push $Ncfbc7800
+ Copy {
+  inputs 2
+  from1 rgba.green
+  to1 rgba.green
+  name Copy2
+  xpos -734
+  ypos 1076
+ }
+ Expression {
+  channel0 rgba
+  expr0 "100.0* ((r/g)**0.5) * (Constants.FL)**0.6"
+  name s
+  label "# calculate saturation, s:"
+  xpos -734
+  ypos 1118
+ }
+set Ncfa4f400 [stack 0]
+ Expression {
+  channel0 rgba
+  name Sz
+  label "# calculate saturation, S:"
+  xpos -734
+  ypos 1196
+ }
+add_layer {zcam_Sz zcam_Sz.red zcam_Sz.green zcam_Sz.blue zcam_Sz.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_Sz
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_Sz.red 0 0 rgba.green 0 1 zcam_Sz.green 0 1 rgba.blue 0 2 zcam_Sz.blue 0 2 rgba.alpha 0 3 zcam_Sz.alpha 0 3"
+  name Shuffle8
+  xpos -1436
+  ypos 1395
+ }
+push $Ncfbc6800
+ Expression {
+  channel0 rgba
+  expr0 "100 - 0.8*(r**2 + 8*g**2)**0.5"
+  name Kz
+  label "# calculate blackness, K:"
+  xpos -895
+  ypos 1195
+ }
+add_layer {zcam_Kz zcam_Kz.red zcam_Kz.green zcam_Kz.blue zcam_Kz.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_Kz
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_Kz.red 0 0 rgba.green 0 1 zcam_Kz.green 0 1 rgba.blue 0 2 zcam_Kz.blue 0 2 rgba.alpha 0 3 zcam_Kz.alpha 0 3"
+  name Shuffle7
+  xpos -1524
+  ypos 1393
+ }
+push $Ncfbc6400
+add_layer {zcam_Wz zcam_Wz.red zcam_Wz.green zcam_Wz.blue zcam_Wz.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_Wz
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_Wz.red 0 0 rgba.green 0 1 zcam_Wz.green 0 1 rgba.blue 0 2 zcam_Wz.blue 0 2 rgba.alpha 0 3 zcam_Wz.alpha 0 3"
+  name Shuffle6
+  xpos -1613
+  ypos 1393
+ }
+push $Ncfa4f400
+add_layer {zcam_s zcam_s.red zcam_s.green zcam_s.blue zcam_s.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_s
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_s.red 0 0 rgba.green 0 1 zcam_s.green 0 1 rgba.blue 0 2 zcam_s.blue 0 2 rgba.alpha 0 3 zcam_s.alpha 0 3"
+  name Shuffle5
+  xpos -1708
+  ypos 1392
+ }
+push $Ncfbc7400
+add_layer {zcam_C zcam_C.red zcam_C.green zcam_C.blue zcam_C.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_C
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_C.red 0 0 rgba.green 0 1 zcam_C.green 0 1 rgba.blue 0 2 zcam_C.blue 0 2 rgba.alpha 0 3 zcam_C.alpha 0 3"
+  name Shuffle4
+  xpos -1798
+  ypos 1391
+ }
+push $Ncfbc6c00
+add_layer {zcam_J zcam_J.red zcam_J.green zcam_J.blue zcam_J.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_J
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_J.red 0 0 rgba.green 0 1 zcam_J.green 0 1 rgba.blue 0 2 zcam_J.blue 0 2 rgba.alpha 0 3 zcam_J.alpha 0 3"
+  name Shuffle1
+  xpos -1900
+  ypos 1390
+ }
+push $Ncfbc7800
+add_layer {zcam_M zcam_M.red zcam_M.green zcam_M.blue zcam_M.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_M
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_M.red 0 0 rgba.green 0 1 zcam_M.green 0 1 rgba.blue 0 2 zcam_M.blue 0 2 rgba.alpha 0 3 zcam_M.alpha 0 3"
+  name Shuffle12
+  xpos -1999
+  ypos 1389
+ }
+push $Ncfbc7000
+add_layer {zcam_Q zcam_Q.red zcam_Q.green zcam_Q.blue zcam_Q.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_Q
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_Q.red 0 0 rgba.green 0 1 zcam_Q.green 0 1 rgba.blue 0 2 zcam_Q.blue 0 2 rgba.alpha 0 3 zcam_Q.alpha 0 3"
+  name Shuffle3
+  xpos -2089
+  ypos 1391
+ }
+push $Ncfc2c800
+add_layer {zcam_h zcam_h.red zcam_h.green zcam_h.blue zcam_h.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_h
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_h.red 0 0 rgba.green 0 1 zcam_h.green 0 1 rgba.blue 0 2 zcam_h.blue 0 2 rgba.alpha 0 3 zcam_h.alpha 0 3"
+  name Shuffle13
+  xpos -2182
+  ypos 1392
+ }
+push $Ncfc2fc00
+ Dot {
+  name Dot16
+  xpos -2265
+  ypos 1253
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_h
+  name Copy21
+  xpos -2299
+  ypos 1416
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_Q
+  name Copy22
+  xpos -2299
+  ypos 1458
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_M
+  name Copy20
+  xpos -2298
+  ypos 1505
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_J
+  name Copy11
+  xpos -2298
+  ypos 1547
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_C
+  name Copy12
+  xpos -2298
+  ypos 1589
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_s
+  name Copy13
+  xpos -2302
+  ypos 1631
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_Wz
+  name Copy14
+  xpos -2302
+  ypos 1673
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_Kz
+  name Copy15
+  xpos -2302
+  ypos 1715
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_Sz
+  name Copy16
+  xpos -2302
+  ypos 1757
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_Vz
+  name Copy17
+  xpos -2302
+  ypos 1799
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_aM
+  name Copy18
+  xpos -2302
+  ypos 1841
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_bM
+  name Copy19
+  xpos -2302
+  ypos 1883
+ }
+ Switch {
+  inputs 2
+  which {{parent.direction}}
+  name direction1
+  xpos -2302
+  ypos 2054
+ }
+ Dot {
+  name Dot17
+  xpos -2268
+  ypos 2157
+ }
+set Ncf9ecc00 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_aM
+  fromInput2 {{0} B}
+  mappings "4 zcam_aM.red 0 0 rgba.red 0 0 zcam_aM.green 0 1 rgba.green 0 1 zcam_aM.blue 0 2 rgba.blue 0 2 zcam_aM.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle16
+  xpos -1639
+  ypos 2252
+ }
+ Dot {
+  name Dot11
+  label aM
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1605
+  ypos 2342
+ }
+push $Ncf9ecc00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_bM
+  fromInput2 {{0} B}
+  mappings "4 zcam_bM.red 0 0 rgba.red 0 0 zcam_bM.green 0 1 rgba.green 0 1 zcam_bM.blue 0 2 rgba.blue 0 2 zcam_bM.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle17
+  xpos -1543
+  ypos 2251
+ }
+ Dot {
+  name Dot12
+  label bM
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1509
+  ypos 2345
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.red
+  name Copy6
+  xpos -1543
+  ypos 2417
+ }
+set N929bb400 [stack 0]
+ Expression {
+  temp_name0 r2d
+  temp_expr0 180.0/pi
+  temp_name1 h360
+  temp_expr1 "360.0\n"
+  temp_name2 h
+  temp_expr2 atan2(g,r)*r2d
+  channel0 rgba
+  expr0 h
+  name inv_h
+  label "   # calculate hue h:\n            h = hue_angle(data\[...,1],data\[...,2], htype = 'deg')\n            print('h:'+str(h))"
+  xpos -1244
+  ypos 2545
+ }
+set N929bb000 [stack 0]
+push $N929bb000
+ Expression {
+  channel0 rgba
+  expr0 "1.015 + cos((r + 89.038)*pi/180)"
+  name inv_ez
+  xpos -1244
+  ypos 2633
+ }
+push $N929bb400
+ Expression {
+  channel0 rgba
+  expr0 "(r**2.0 + g**2.0)**0.5"
+  name MCs
+  label "  if 'a' in outin\[1]: \n            # calculate hue h:\n            h = hue_angle(data\[...,1],data\[...,2], htype = 'deg')\n        \n            #--------------------------------------------\n            # calculate Colorfulness M or Chroma C or Saturation s from a,b:\n            MCs = (data\[...,1]**2.0 + data\[...,2]**2.0)**0.5  \n            print('MCs:'+str(MCs))"
+  xpos -1543
+  ypos 2546
+ }
+set N929ba800 [stack 0]
+ Dot {
+  name Dot20
+  xpos -1753
+  ypos 2679
+ }
+ Expression {
+  channel0 rgba
+  expr0 100*r/Constants.Qw
+  name inv2_C
+  label "        if ('aM' in outin) | ('M' in outin): \n            C = 100*MCs/Qw"
+  xpos -1787
+  ypos 2718
+ }
+ Expression {
+  channel0 rgba
+  expr0 "Constants.Qw * r / 100"
+  name inv_M
+  label "        #--------------------------------------------\n        # Calculate colorfulness, M:\n        M = Qw * C / 100\n        "
+  xpos -1543
+  ypos 2808
+ }
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy7
+  xpos -1543
+  ypos 2860
+ }
+ Expression {
+  channel0 rgba
+  expr0 "(((r/100) * (Constants.iabzw.r**0.78) * (Constants.Fb**0.1))/((g**0.068)*(Constants.FL**0.2)))**(1/0.37/2)"
+  name inv_t
+  label "       #--------------------------------------------\n        # calculate t (=sqrt(a**2+b**2)) from M:\n        t = (((M/100) * (iabzw\[...,0]**0.78) * (Fb**0.1))/((ez**0.068)*(FL**0.2)))**(1/0.37/2)"
+  xpos -1543
+  ypos 2906
+ }
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy8
+  xpos -1543
+  ypos 2986
+ }
+set N929b9400 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r*sin(g*pi/180)
+  name inv_bz
+  label t*np.sin(h*np.pi/180)
+  xpos -1402
+  ypos 3067
+ }
+push $N929b9400
+ Expression {
+  channel0 rgba
+  expr0 r*cos(g*pi/180)
+  name inv_az
+  label "az = t*np.cos(h*np.pi/180)"
+  xpos -1543
+  ypos 3064
+ }
+push $Ncf9ecc00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_J
+  fromInput2 {{0} B}
+  mappings "4 zcam_J.red 0 0 rgba.red 0 0 zcam_J.green 0 1 rgba.green 0 1 zcam_J.blue 0 2 rgba.blue 0 2 zcam_J.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle14
+  xpos -2302
+  ypos 2259
+ }
+ Dot {
+  name Dot8
+  label J
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -2268
+  ypos 2342
+ }
+ NoOp {
+  name inv_J
+  xpos -2220
+  ypos 2480
+ }
+set Ncf97bc00 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 Constants.Qw*(r/100)
+  name inv_Q
+  label "# Get Lightness J and brightness Q from data:"
+  xpos -2220
+  ypos 2555
+ }
+set Ncf97b800 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 (r/(2700*(Constants.Fs**2.2)*(Constants.Fb**0.5)*(Constants.FL**0.2)))**((Constants.Fb**0.12)/(1.6*Constants.Fs))
+  name inv_Iz
+  label "# calculate achromatic signal, Iz:"
+  xpos -2220
+  ypos 2622
+ }
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy9
+  xpos -2181
+  ypos 3184
+ }
+ Copy {
+  inputs 2
+  from0 rgba.blue
+  to0 rgba.blue
+  name Copy10
+  xpos -2181
+  ypos 3216
+ }
+ Dot {
+  name Dot15
+  label iabz
+  note_font_size 20
+  xpos -2147
+  ypos 3275
+ }
+ Dot {
+  name Dot13
+  xpos -2145
+  ypos 3414
+ }
+ Dot {
+  name Dot14
+  xpos -2145
+  ypos 3470
+ }
+set N92947000 [stack 0]
+ Expression {
+  expr0 "(r + 1.6295499532821566e-11)/(1 - 0.56*(1 - (r + 1.6295499532821566e-11)))"
+  name Expression3
+  label "   # Convert Jz to Iz:\n    if ztype == 'jabz':\n        jabz\[...,0] = (jabz\[...,0] + 1.6295499532821566e-11)/(1 - 0.56*(1 - (jabz\[...,0] + 1.6295499532821566e-11)))\n"
+  xpos -2050
+  ypos 3532
+ }
+push $N92947000
+ Switch {
+  inputs 2
+  name use_zcam_parameters2
+  label "# convert Iabz' to Jabz coordinates:\n    if ztype == 'jabz':"
+  xpos -2179
+  ypos 3608
+ }
+set N929e8100 [stack 0]
+ Dot {
+  name Dot19
+  label Iabz
+  xpos -2092
+  ypos 3678
+ }
+ Add {
+  value 3.703522621e-11
+  name Add2
+  label "Iabz\[...,0]-=epsilon # correct to ensure zero output"
+  xpos -2126
+  ypos 3712
+ }
+ ColorMatrix {
+  matrix {
+      {0 1 0}
+      {3.524 -4.066708 0.542708}
+      {0.199076 1.096799 -1.295875}
+    }
+  invert true
+  name _M_LMSP_TO_IAB_ZCAM1
+  xpos -2126
+  ypos 3750
+ }
+push $N929e8100
+ Dot {
+  name Dot18
+  label Iabz
+  xpos -2216
+  ypos 3683
+ }
+ ColorMatrix {
+  matrix {
+      {0.5 0.5 0}
+      {3.524 -4.066708 0.542708}
+      {0.199076 1.096799 -1.295875}
+    }
+  invert true
+  name _M_LMSP_TO_IAB_JABZ1
+  xpos -2250
+  ypos 3748
+ }
+ Switch {
+  inputs 2
+  which 1
+  name use_zcam_parameters3
+  xpos -2182
+  ypos 3844
+ }
+ Expression {
+  expr0 "10000*((c1 - r**(1/p)) / ((c3*r**(1/p)) - c2))**(1/n)"
+  expr1 "10000*((c1 - g**(1/p)) / ((c3*g**(1/p)) - c2))**(1/n)"
+  expr2 "10000*((c1 - b**(1/p)) / ((c3*b**(1/p)) - c2))**(1/n)"
+  name Expression4
+  label "        \n    # Convert lmsp to lms:\n    c1, c2, c3, n, p = \[_PQ_PARAMETERS\[x] for x in sorted(_PQ_PARAMETERS.keys())]\n    lms = 10000*((c1 - lmsp**(1/p)) / ((c3*lmsp**(1/p)) - c2))**(1/n)\n   "
+  xpos -2182
+  ypos 3874
+  addUserKnob {20 _PQ_PARAMETERS}
+  addUserKnob {7 c1}
+  c1 {{3424/2**12}}
+  addUserKnob {7 c2}
+  c2 {{2413/2**7}}
+  addUserKnob {7 c3}
+  c3 {{2392/2**7}}
+  addUserKnob {7 n}
+  n {{2610/2**14}}
+  addUserKnob {7 p}
+  p {{1.7*2523/2**5}}
+ }
+ ColorMatrix {
+  matrix {
+      {0.41478972 0.579999 0.014648}
+      {-0.20151 1.120649 0.0531008}
+      {-0.0166008 0.2648 0.6684799}
+    }
+  invert true
+  name _M_XYZP_TO_LMS1
+  label "# Define X',Y',Z' to L,M,S conversion matrix:"
+  xpos -2182
+  ypos 3949
+ }
+ ColorMatrix {
+  matrix {
+      {{b} 0 {1-b}}
+      {{1-g} {g} 0}
+      {0 0 1}
+    }
+  invert true
+  name M_to_xyzp1
+  label " # Setup X,Y,Z to X',Y',Z' transform as matrix:\n    b = 1.15 \n    g = 0.66\n\n    M_to_xyzp = np.array(\[\[b, 0, 1 - b],\[1 - g, g, 0],\[0, 0, 1]])"
+  xpos -2182
+  ypos 3981
+  addUserKnob {20 User}
+  addUserKnob {7 b}
+  b 1.15
+  addUserKnob {7 g}
+  g 0.66
+ }
+push $Ncf9ecc00
+ Switch {
+  inputs 2
+  which {{parent.direction}}
+  name direction
+  xpos -1519
+  ypos 4172
+ }
+ Output {
+  name Output1
+  xpos -1519
+  ypos 4272
+ }
+push $Ncf97b800
+push $Ncf9ecc00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_Sz
+  fromInput2 {{0} B}
+  mappings "4 zcam_Sz.red 0 0 rgba.red 0 0 zcam_Sz.green 0 1 rgba.green 0 1 zcam_Sz.blue 0 2 rgba.blue 0 2 zcam_Sz.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle15
+  xpos -1870
+  ypos 2254
+ }
+ Dot {
+  name Dot10
+  label Sz
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1836
+  ypos 2342
+ }
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy4
+  xpos -1770
+  ypos 2535
+ }
+ Expression {
+  expr0 "(g / Constants.Qw) * Constants.MCs**2 / FL**1.2 / 100"
+  name inv_C
+  label "if ('Sz' in outin) | ('aSz' in outin):  # saturation"
+  xpos -1770
+  ypos 2607
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color 4.9767
+  name Constant1
+  xpos 567
+  ypos 1001
+ }
+push $Ncf97bc00
+push $N929ba800
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy23
+  xpos -1596
+  ypos 2681
+ }
+ Expression {
+  channel0 rgba
+  expr0 "(((100-r))**2 - (100 - g)**2)**0.5"
+  name inv3_C
+  label "if ('Wz' in outin) | ('aWz' in outin): #whiteness\n            C = (((100-MCs))**2 - (100 - J)**2)**0.5"
+  xpos -1596
+  ypos 2713
+ }
+push $Ncf97bc00
+ Viewer {
+  inputs 2
+  frame_range 1-100
+  colour_sample_bbox {0.4580078125 -0.1640625 0.458984375 -0.1630859375}
+  viewerProcess "sRGB (default)"
+  name Viewer1
+  xpos -1766
+  ypos 2790
+ }
+end_group
