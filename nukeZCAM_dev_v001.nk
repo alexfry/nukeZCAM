@@ -2,20 +2,19 @@
 version 13.0 v3
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
-    <window x="0" y="25" w="3008" h="1562" screen="0">
+    <window x="0" y="25" w="2560" h="1470" maximized="1" screen="0">
         <splitter orientation="1">
             <split size="40"/>
             <dock id="" hideTitles="1" activePageId="Toolbar.1">
                 <page id="Toolbar.1"/>
             </dock>
-            <split size="2345" stretch="1"/>
+            <split size="1897" stretch="1"/>
             <splitter orientation="2">
-                <split size="905"/>
+                <split size="851"/>
                 <dock id="" activePageId="Viewer.1">
-                    <page id="Viewer.2"/>
                     <page id="Viewer.1"/>
                 </dock>
-                <split size="637"/>
+                <split size="599"/>
                 <dock id="" activePageId="DAG.1" focus="true">
                     <page id="DAG.1"/>
                     <page id="Curve Editor.1"/>
@@ -50,6 +49,21 @@ Root {
  logLut compositing_log
  floatLut scene_linear
 }
+Constant {
+ inputs 0
+ channels rgb
+ color {1 0.4 0.4 1}
+ color_panelDropped true
+ name Constant1
+ xpos 538
+ ypos -278
+}
+Colorspace {
+ colorspace_out CIE-XYZ
+ name Colorspace1
+ xpos 538
+ ypos -206
+}
 Read {
  inputs 0
  file_type exr
@@ -59,7 +73,7 @@ Read {
  raw true
  name Read1
  xpos 705
- ypos -284
+ ypos -281
 }
 Colorspace {
  primary_in ACES
@@ -69,7 +83,7 @@ Colorspace {
  xpos 705
  ypos -123
 }
-set N216d1400 [stack 0]
+set N2a9c6000 [stack 0]
 Multiply {
  value 100
  name Multiply3
@@ -84,12 +98,16 @@ Dot {
 }
 Group {
  name ZCAM
- label "\[value direction]\n0.0.1"
+ label "\[value direction]\n\[if \{\[value direction] ==\"inverse\"\} \{return \[value inverseData0]\} \{return  \"\"\}] - \[if \{\[value direction] ==\"inverse\"\} \{return \[value inverseData1]\} \{return  \"\"\}]\n0.0.2"
  xpos 705
- ypos 32
+ ypos -1
  addUserKnob {20 ZCAM}
  addUserKnob {4 direction M {forward inverse}}
  addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 inverseModes l "Inverse Input Data Modes"}
+ addUserKnob {4 inverseData0 l "Inverse Data 0" M {J Q}}
+ addUserKnob {4 inverseData1 l "Inverse Data 1" M {aM,bM aC,bC aS,bS M,h C,h}}
+ addUserKnob {26 ""}
  addUserKnob {26 _1 l _SURROUND_PARAMETERS}
  addUserKnob {41 surrounds T Constants.surrounds}
  addUserKnob {41 c T Constants.c}
@@ -146,8 +164,8 @@ Group {
   note_font_size 42
   xpos -2310
   ypos 2374
-  bdwidth 1157
-  bdheight 936
+  bdwidth 1715
+  bdheight 953
  }
  BackdropNode {
   inputs 0
@@ -186,7 +204,7 @@ Group {
   xpos -950
   ypos -21
  }
-set Ncfc2fc00 [stack 0]
+set N2a9c4c00 [stack 0]
  ColorMatrix {
   matrix {
       {{b} 0 {1-b}}
@@ -227,7 +245,7 @@ set Ncfc2fc00 [stack 0]
   name Expression1
   label "# response compression: lms to lms'"
   xpos -984
-  ypos 198
+  ypos 199
   addUserKnob {20 _PQ_PARAMETERS}
   addUserKnob {7 c1}
   c1 {{3424/2**12}}
@@ -246,7 +264,7 @@ set Ncfc2fc00 [stack 0]
   xpos -950
   ypos 260
  }
-set Ncfc2e800 [stack 0]
+set N2a95f400 [stack 0]
  ColorMatrix {
   matrix {
       {0 1 0}
@@ -270,7 +288,7 @@ set Ncfc2e800 [stack 0]
   xpos -878
   ypos 411
  }
-push $Ncfc2e800
+push $N2a95f400
  ColorMatrix {
   matrix {
       {0.5 0.5 0}
@@ -294,7 +312,7 @@ push $Ncfc2e800
   xpos -978
   ypos 441
  }
-set Ncfc2ab00 [stack 0]
+set N2a972400 [stack 0]
  Expression {
   expr0 "((1-0.56)*r/(1-0.56*r)) - 1.6295499532821566e-11"
   name Expression2
@@ -302,7 +320,7 @@ set Ncfc2ab00 [stack 0]
   xpos -886
   ypos 492
  }
-push $Ncfc2ab00
+push $N2a972400
  Switch {
   inputs 2
   name use_zcam_parameters1
@@ -316,7 +334,7 @@ push $Ncfc2ab00
   xpos -944
   ypos 753
  }
-set Ncfc2cc00 [stack 0]
+set N2a95d800 [stack 0]
  Expression {
   temp_name0 r2d
   temp_expr0 180.0/pi
@@ -330,7 +348,7 @@ set Ncfc2cc00 [stack 0]
   xpos -1074
   ypos 904
  }
-set Ncfc2c800 [stack 0]
+set N2a95d400 [stack 0]
  Expression {
   temp_name0 h
   temp_expr0 r
@@ -340,7 +358,7 @@ set Ncfc2c800 [stack 0]
   xpos -1074
   ypos 928
  }
-push $Ncfc2cc00
+push $N2a95d800
  Copy {
   inputs 2
   from0 rgba.red
@@ -357,7 +375,7 @@ push $Ncfc2cc00
   xpos -894
   ypos 1021
  }
-set Ncfbc7800 [stack 0]
+set N2a95c800 [stack 0]
  Expression {
   channel0 rgba
   expr0 100*r/Constants.Qw
@@ -366,8 +384,8 @@ set Ncfbc7800 [stack 0]
   xpos -894
   ypos 1118
  }
-set Ncfbc7400 [stack 0]
-push $Ncfc2cc00
+set N2a95c400 [stack 0]
+push $N2a95d800
  Expression {
   channel0 rgba
   expr0 "2700 * (r**(1.6*Constants.Fs/(Constants.Fb**0.12))) * (Constants.Fs**2.2) * (Constants.Fb**0.5) * (Constants.FL**0.2)"
@@ -376,7 +394,7 @@ push $Ncfc2cc00
   xpos -1030
   ypos 1019
  }
-set Ncfbc7000 [stack 0]
+set N2a8e3c00 [stack 0]
  Expression {
   channel0 rgba
   expr0 "100.0 * (r/Constants.Qw)"
@@ -385,7 +403,7 @@ set Ncfbc7000 [stack 0]
   xpos -1030
   ypos 1117
  }
-set Ncfbc6c00 [stack 0]
+set N2a8e3800 [stack 0]
  Copy {
   inputs 2
   from0 rgba.green
@@ -394,7 +412,7 @@ set Ncfbc6c00 [stack 0]
   xpos -1030
   ypos 1155
  }
-set Ncfbc6800 [stack 0]
+set N2a8e3400 [stack 0]
  Expression {
   channel0 rgba
   expr0 "100 - ((100-r)**2 + g**2)**0.5"
@@ -403,7 +421,7 @@ set Ncfbc6800 [stack 0]
   xpos -1030
   ypos 1195
  }
-set Ncfbc6400 [stack 0]
+set N2a8e3000 [stack 0]
 add_layer {zcam zcam.J zcam.Q zcam.M zcam.C}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -414,7 +432,7 @@ add_layer {zcam zcam.J zcam.Q zcam.M zcam.C}
   xpos -1202
   ypos 1199
  }
-push $Ncfc2c800
+push $N2a95d400
  Dot {
   name Dot9
   label h
@@ -423,25 +441,7 @@ push $Ncfc2c800
   xpos -1975
   ypos 2339
  }
-push $Ncfbc6c00
- Grade {
-  multiply 0.5
-  name Grade2
-  xpos -1030
-  ypos 1314
-  disable true
- }
- ColorLookup {
-  lut {master {curve C -1.408769725 k x342.8180237 100 s0}
-    red {}
-    green {}
-    blue {}
-    alpha {}}
-  name ColorLookup1
-  xpos -1030
-  ypos 1338
- }
-push $Ncfc2cc00
+push $N2a95d800
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -450,7 +450,7 @@ push $Ncfc2cc00
   xpos -1127
   ypos 835
  }
-push $Ncfc2cc00
+push $N2a95d800
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -459,7 +459,7 @@ push $Ncfc2cc00
   xpos -978
   ypos 837
  }
-push $Ncfc2cc00
+push $N2a95d800
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -521,24 +521,24 @@ push $Ncfc2cc00
   addUserKnob {7 Qw}
   Qw 185.85
  }
-push $Ncfc2fc00
-push $Ncfc2c800
-push $Ncfbc7800
+push $N2a9c4c00
+push $N2a95d400
+push $N2a95c800
  Copy {
   inputs 2
   from0 rgba.green
   to0 rgba.green
   name Copy5
-  xpos -367
-  ypos 1141
+  xpos 67
+  ypos 1136
  }
-set Ncfbc5800 [stack 0]
+set N2a8e0c00 [stack 0]
  Expression {
   channel0 rgba
   expr0 r*sin(g*pi/180.0)
   name bM
-  xpos -271
-  ypos 1203
+  xpos 163
+  ypos 1202
  }
 add_layer {zcam_bM zcam_bM.red zcam_bM.green zcam_bM.blue zcam_bM.alpha}
  Shuffle2 {
@@ -547,16 +547,16 @@ add_layer {zcam_bM zcam_bM.red zcam_bM.green zcam_bM.blue zcam_bM.alpha}
   fromInput2 {{0} B}
   mappings "4 rgba.red 0 0 zcam_bM.red 0 0 rgba.green 0 1 zcam_bM.green 0 1 rgba.blue 0 2 zcam_bM.blue 0 2 rgba.alpha 0 3 zcam_bM.alpha 0 3"
   name Shuffle11
-  xpos -1154
-  ypos 1398
+  xpos -752
+  ypos 1400
  }
-push $Ncfbc5800
+push $N2a8e0c00
  Expression {
   channel0 rgba
   expr0 r*cos(g*pi/180.0)
   name aM
-  xpos -367
-  ypos 1204
+  xpos 67
+  ypos 1203
  }
 add_layer {zcam_aM zcam_aM.red zcam_aM.green zcam_aM.blue zcam_aM.alpha}
  Shuffle2 {
@@ -565,10 +565,120 @@ add_layer {zcam_aM zcam_aM.red zcam_aM.green zcam_aM.blue zcam_aM.alpha}
   fromInput2 {{0} B}
   mappings "4 rgba.red 0 0 zcam_aM.red 0 0 rgba.green 0 1 zcam_aM.green 0 1 rgba.blue 0 2 zcam_aM.blue 0 2 rgba.alpha 0 3 zcam_aM.alpha 0 3"
   name Shuffle10
-  xpos -1250
+  xpos -848
+  ypos 1400
+ }
+push $N2a95d400
+push $N2a95c400
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy25
+  xpos -164
+  ypos 1149
+ }
+set N77951c00 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r*sin(g*pi/180.0)
+  name bC
+  xpos -76
+  ypos 1207
+ }
+add_layer {zcam_bC zcam_bC.red zcam_bC.green zcam_bC.blue zcam_bC.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_bC
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_bC.red 0 0 rgba.green 0 1 zcam_bC.green 0 1 rgba.blue 0 2 zcam_bC.blue 0 2 rgba.alpha 0 3 zcam_bC.alpha 0 3"
+  name Shuffle25
+  xpos -949
+  ypos 1399
+ }
+push $N77951c00
+ Expression {
+  channel0 rgba
+  expr0 r*cos(g*pi/180.0)
+  name aC
+  xpos -164
+  ypos 1207
+ }
+add_layer {zcam_aC zcam_aC.red zcam_aC.green zcam_aC.blue zcam_aC.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_aC
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_aC.red 0 0 rgba.green 0 1 zcam_aC.green 0 1 rgba.blue 0 2 zcam_aC.blue 0 2 rgba.alpha 0 3 zcam_aC.alpha 0 3"
+  name Shuffle24
+  xpos -1048
+  ypos 1397
+ }
+push $N2a95d400
+push $N2a8e3c00
+push $N2a95c800
+ Copy {
+  inputs 2
+  from1 rgba.green
+  to1 rgba.green
+  name Copy2
+  xpos -734
+  ypos 1076
+ }
+ Expression {
+  channel0 rgba
+  expr0 "100.0* ((r/g)**0.5) * (Constants.FL)**0.6"
+  name s
+  label "# calculate saturation, s:"
+  xpos -734
+  ypos 1118
+ }
+set N2ada6800 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy24
+  xpos -381
+  ypos 1143
+ }
+set N77952800 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r*sin(g*pi/180.0)
+  name bS
+  xpos -287
+  ypos 1207
+ }
+add_layer {zcam_bS zcam_bS.red zcam_bS.green zcam_bS.blue zcam_bS.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_bS
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_bS.red 0 0 rgba.green 0 1 zcam_bS.green 0 1 rgba.blue 0 2 zcam_bS.blue 0 2 rgba.alpha 0 3 zcam_bS.alpha 0 3"
+  name Shuffle23
+  xpos -1150
   ypos 1398
  }
-push $Ncfbc6800
+push $N77952800
+ Expression {
+  channel0 rgba
+  expr0 r*cos(g*pi/180.0)
+  name aS
+  xpos -381
+  ypos 1207
+ }
+add_layer {zcam_aS zcam_aS.red zcam_aS.green zcam_aS.blue zcam_aS.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_aS
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_aS.red 0 0 rgba.green 0 1 zcam_aS.green 0 1 rgba.blue 0 2 zcam_aS.blue 0 2 rgba.alpha 0 3 zcam_aS.alpha 0 3"
+  name Shuffle22
+  xpos -1254
+  ypos 1395
+ }
+push $N2a8e3400
  Expression {
   channel0 rgba
   expr0 "((r - 58)**2 + 3.4*g**2)**0.5"
@@ -587,25 +697,7 @@ add_layer {zcam_Vz zcam_Vz.red zcam_Vz.green zcam_Vz.blue zcam_Vz.alpha}
   xpos -1345
   ypos 1396
  }
-push $Ncfbc7000
-push $Ncfbc7800
- Copy {
-  inputs 2
-  from1 rgba.green
-  to1 rgba.green
-  name Copy2
-  xpos -734
-  ypos 1076
- }
- Expression {
-  channel0 rgba
-  expr0 "100.0* ((r/g)**0.5) * (Constants.FL)**0.6"
-  name s
-  label "# calculate saturation, s:"
-  xpos -734
-  ypos 1118
- }
-set Ncfa4f400 [stack 0]
+push $N2ada6800
  Expression {
   channel0 rgba
   name Sz
@@ -623,7 +715,7 @@ add_layer {zcam_Sz zcam_Sz.red zcam_Sz.green zcam_Sz.blue zcam_Sz.alpha}
   xpos -1436
   ypos 1395
  }
-push $Ncfbc6800
+push $N2a8e3400
  Expression {
   channel0 rgba
   expr0 "100 - 0.8*(r**2 + 8*g**2)**0.5"
@@ -642,7 +734,7 @@ add_layer {zcam_Kz zcam_Kz.red zcam_Kz.green zcam_Kz.blue zcam_Kz.alpha}
   xpos -1524
   ypos 1393
  }
-push $Ncfbc6400
+push $N2a8e3000
 add_layer {zcam_Wz zcam_Wz.red zcam_Wz.green zcam_Wz.blue zcam_Wz.alpha}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -653,7 +745,7 @@ add_layer {zcam_Wz zcam_Wz.red zcam_Wz.green zcam_Wz.blue zcam_Wz.alpha}
   xpos -1613
   ypos 1393
  }
-push $Ncfa4f400
+push $N2ada6800
 add_layer {zcam_s zcam_s.red zcam_s.green zcam_s.blue zcam_s.alpha}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -664,7 +756,7 @@ add_layer {zcam_s zcam_s.red zcam_s.green zcam_s.blue zcam_s.alpha}
   xpos -1708
   ypos 1392
  }
-push $Ncfbc7400
+push $N2a95c400
 add_layer {zcam_C zcam_C.red zcam_C.green zcam_C.blue zcam_C.alpha}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -675,7 +767,7 @@ add_layer {zcam_C zcam_C.red zcam_C.green zcam_C.blue zcam_C.alpha}
   xpos -1798
   ypos 1391
  }
-push $Ncfbc6c00
+push $N2a8e3800
 add_layer {zcam_J zcam_J.red zcam_J.green zcam_J.blue zcam_J.alpha}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -686,7 +778,7 @@ add_layer {zcam_J zcam_J.red zcam_J.green zcam_J.blue zcam_J.alpha}
   xpos -1900
   ypos 1390
  }
-push $Ncfbc7800
+push $N2a95c800
 add_layer {zcam_M zcam_M.red zcam_M.green zcam_M.blue zcam_M.alpha}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -697,7 +789,7 @@ add_layer {zcam_M zcam_M.red zcam_M.green zcam_M.blue zcam_M.alpha}
   xpos -1999
   ypos 1389
  }
-push $Ncfbc7000
+push $N2a8e3c00
 add_layer {zcam_Q zcam_Q.red zcam_Q.green zcam_Q.blue zcam_Q.alpha}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -708,7 +800,7 @@ add_layer {zcam_Q zcam_Q.red zcam_Q.green zcam_Q.blue zcam_Q.alpha}
   xpos -2089
   ypos 1391
  }
-push $Ncfc2c800
+push $N2a95d400
 add_layer {zcam_h zcam_h.red zcam_h.green zcam_h.blue zcam_h.alpha}
  Shuffle2 {
   fromInput1 {{0} B}
@@ -719,7 +811,7 @@ add_layer {zcam_h zcam_h.red zcam_h.green zcam_h.blue zcam_h.alpha}
   xpos -2182
   ypos 1392
  }
-push $Ncfc2fc00
+push $N2a9c4c00
  Dot {
   name Dot16
   xpos -2265
@@ -819,10 +911,46 @@ push $Ncfc2fc00
   inputs 2
   from0 -rgba.alpha
   to0 -rgba.alpha
+  channels zcam_aS
+  name Copy26
+  xpos -2302
+  ypos 1841
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_bS
+  name Copy27
+  xpos -2302
+  ypos 1883
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_aC
+  name Copy28
+  xpos -2302
+  ypos 1925
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_bC
+  name Copy29
+  xpos -2302
+  ypos 1963
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
   channels zcam_aM
   name Copy18
   xpos -2302
-  ypos 1841
+  ypos 2005
  }
  Copy {
   inputs 2
@@ -831,65 +959,113 @@ push $Ncfc2fc00
   channels zcam_bM
   name Copy19
   xpos -2302
-  ypos 1883
+  ypos 2047
  }
  Switch {
   inputs 2
   which {{parent.direction}}
   name direction1
   xpos -2302
-  ypos 2054
+  ypos 2112
  }
  Dot {
   name Dot17
   xpos -2268
   ypos 2157
  }
-set Ncf9ecc00 [stack 0]
+set N59337c00 [stack 0]
  Shuffle2 {
   fromInput1 {{0} B}
-  in1 zcam_aM
+  in1 zcam_h
   fromInput2 {{0} B}
-  mappings "4 zcam_aM.red 0 0 rgba.red 0 0 zcam_aM.green 0 1 rgba.green 0 1 zcam_aM.blue 0 2 rgba.blue 0 2 zcam_aM.alpha 0 3 rgba.alpha 0 3"
-  name Shuffle16
-  xpos -1639
-  ypos 2252
+  mappings "4 zcam_h.red 0 0 rgba.red 0 0 zcam_h.green 0 1 rgba.green 0 1 zcam_h.blue 0 2 rgba.blue 0 2 zcam_h.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle20
+  xpos -1041
+  ypos 2260
  }
  Dot {
-  name Dot11
-  label aM
+  name Dot41
+  label h
   note_font_size 20
   note_font_color 0x677754ff
-  xpos -1605
-  ypos 2342
+  xpos -1007
+  ypos 2349
  }
-push $Ncf9ecc00
+ Dot {
+  name Dot33
+  label "h in outIn"
+  xpos -1007
+  ypos 2613
+ }
+set N7cefe800 [stack 0]
+ Dot {
+  name Dot34
+  xpos -1007
+  ypos 2652
+ }
+push $N7cefe800
+ Dot {
+  name Dot35
+  xpos -1034
+  ypos 2640
+ }
+push $N59337c00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_bS
+  fromInput2 {{0} B}
+  in2 zcam_aS
+  mappings "4 zcam_bS.blue 0 2 rgba.blue 0 2 zcam_bS.alpha 0 3 rgba.alpha 0 3 zcam_bS.green 0 1 rgba.green 0 1 zcam_aS.red 1 0 rgba.red 0 0"
+  name Shuffle16
+  label "aS & bS"
+  note_font_size 15
+  xpos -1489
+  ypos 2304
+ }
+push $N59337c00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_bC
+  fromInput2 {{0} B}
+  in2 zcam_aC
+  mappings "4 zcam_bC.blue 0 2 rgba.blue 0 2 zcam_bC.alpha 0 3 rgba.alpha 0 3 zcam_bC.green 0 1 rgba.green 0 1 zcam_aC.red 1 0 rgba.red 0 0"
+  name Shuffle17
+  label "aC & bC"
+  note_font_size 15
+  xpos -1585
+  ypos 2304
+ }
+push $N59337c00
  Shuffle2 {
   fromInput1 {{0} B}
   in1 zcam_bM
   fromInput2 {{0} B}
-  mappings "4 zcam_bM.red 0 0 rgba.red 0 0 zcam_bM.green 0 1 rgba.green 0 1 zcam_bM.blue 0 2 rgba.blue 0 2 zcam_bM.alpha 0 3 rgba.alpha 0 3"
-  name Shuffle17
+  in2 zcam_aM
+  mappings "4 zcam_bM.blue 0 2 rgba.blue 0 2 zcam_bM.alpha 0 3 rgba.alpha 0 3 zcam_bM.green 0 1 rgba.green 0 1 zcam_aM.red 1 0 rgba.red 0 0"
+  name Shuffle26
+  label "aM & bM"
+  note_font_size 15
+  xpos -1682
+  ypos 2303
+ }
+ Switch {
+  inputs 3
+  which {{parent.inverseData1}}
+  name inputdata_abX_mode
   xpos -1543
-  ypos 2251
+  ypos 2400
  }
  Dot {
-  name Dot12
-  label bM
-  note_font_size 20
-  note_font_color 0x677754ff
+  name Dot30
   xpos -1509
-  ypos 2345
+  ypos 2449
  }
- Copy {
-  inputs 2
-  from0 rgba.red
-  to0 rgba.red
-  name Copy6
-  xpos -1543
-  ypos 2417
+set N1f19dc00 [stack 0]
+ Dot {
+  name Dot29
+  xpos -1210
+  ypos 2483
  }
-set N929bb400 [stack 0]
  Expression {
   temp_name0 r2d
   temp_expr0 180.0/pi
@@ -902,39 +1078,280 @@ set N929bb400 [stack 0]
   name inv_h
   label "   # calculate hue h:\n            h = hue_angle(data\[...,1],data\[...,2], htype = 'deg')\n            print('h:'+str(h))"
   xpos -1244
-  ypos 2545
+  ypos 2546
  }
-set N929bb000 [stack 0]
-push $N929bb000
+ Dot {
+  name Dot36
+  label "a in outIn"
+  xpos -1210
+  ypos 2619
+ }
+set N7cefdc00 [stack 0]
+ Dot {
+  name Dot37
+  xpos -1163
+  ypos 2636
+ }
+push $N7cefdc00
+ Dot {
+  name Dot38
+  xpos -1185
+  ypos 2648
+ }
+push $N7cefdc00
+ Dot {
+  name Dot39
+  xpos -1210
+  ypos 2663
+ }
+ Switch {
+  inputs 5
+  which {{parent.inverseData1}}
+  name inverseData1_Mode1
+  label MCs
+  xpos -1116
+  ypos 2672
+ }
+ Dot {
+  name Dot40
+  xpos -1210
+  ypos 2719
+ }
+set N7cefcc00 [stack 0]
+push $N7cefcc00
  Expression {
   channel0 rgba
   expr0 "1.015 + cos((r + 89.038)*pi/180)"
   name inv_ez
   xpos -1244
-  ypos 2633
+  ypos 2756
  }
-push $N929bb400
+push $N59337c00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_C
+  fromInput2 {{0} B}
+  mappings "4 zcam_C.red 0 0 rgba.red 0 0 zcam_C.green 0 1 rgba.green 0 1 zcam_C.blue 0 2 rgba.blue 0 2 zcam_C.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle21
+  xpos -1357
+  ypos 2252
+ }
+ Dot {
+  name Dot42
+  label C
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1323
+  ypos 2341
+ }
+ Expression {
+  channel0 rgba
+  expr0 r
+  name MCs2
+  label "        elif 'h' in outin:\n            h = data\[...,2]\n            MCs = data\[...,1]  "
+  xpos -1357
+  ypos 2501
+ }
+ Dot {
+  name Dot43
+  label "h in outIn"
+  xpos -1323
+  ypos 2578
+ }
+push $N59337c00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_M
+  fromInput2 {{0} B}
+  mappings "4 zcam_M.red 0 0 rgba.red 0 0 zcam_M.green 0 1 rgba.green 0 1 zcam_M.blue 0 2 rgba.blue 0 2 zcam_M.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle19
+  xpos -1442
+  ypos 2252
+ }
+ Dot {
+  name Dot31
+  label M
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1408
+  ypos 2341
+ }
+ Expression {
+  channel0 rgba
+  expr0 r
+  name MCs1
+  label "        elif 'h' in outin:\n            h = data\[...,2]\n            MCs = data\[...,1]  "
+  xpos -1442
+  ypos 2501
+ }
+ Dot {
+  name Dot25
+  label "h in outIn"
+  xpos -1408
+  ypos 2575
+ }
+push $N1f19dc00
  Expression {
   channel0 rgba
   expr0 "(r**2.0 + g**2.0)**0.5"
   name MCs
   label "  if 'a' in outin\[1]: \n            # calculate hue h:\n            h = hue_angle(data\[...,1],data\[...,2], htype = 'deg')\n        \n            #--------------------------------------------\n            # calculate Colorfulness M or Chroma C or Saturation s from a,b:\n            MCs = (data\[...,1]**2.0 + data\[...,2]**2.0)**0.5  \n            print('MCs:'+str(MCs))"
-  xpos -1543
-  ypos 2546
+  xpos -1645
+  ypos 2460
  }
-set N929ba800 [stack 0]
  Dot {
-  name Dot20
-  xpos -1753
-  ypos 2679
+  name Dot24
+  label "a in outIn"
+  xpos -1611
+  ypos 2581
  }
+set N984a1800 [stack 0]
+ Dot {
+  name Dot28
+  xpos -1564
+  ypos 2598
+ }
+push $N984a1800
+ Dot {
+  name Dot27
+  xpos -1586
+  ypos 2610
+ }
+push $N984a1800
+ Dot {
+  name Dot26
+  xpos -1611
+  ypos 2625
+ }
+ Switch {
+  inputs 5
+  which {{parent.inverseData1}}
+  name inverseData1_Mode
+  label MCs
+  xpos -1517
+  ypos 2634
+ }
+set N7cb73900 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r
+  name C_from_aC
+  label "        if ('aM' in outin) | ('M' in outin): \n            C = 100*MCs/Qw"
+  xpos -1926
+  ypos 2714
+ }
+set N1f19cc00 [stack 0]
+ Dot {
+  name Dot44
+  label C,h
+  selected true
+  xpos -1673
+  ypos 2768
+ }
+push $N7cb73900
  Expression {
   channel0 rgba
   expr0 100*r/Constants.Qw
-  name inv2_C
+  name C_from_aM
   label "        if ('aM' in outin) | ('M' in outin): \n            C = 100*MCs/Qw"
-  xpos -1787
-  ypos 2718
+  xpos -2036
+  ypos 2713
+ }
+set N59335400 [stack 0]
+ Dot {
+  name Dot20
+  label M,h
+  selected true
+  xpos -1737
+  ypos 2767
+ }
+push $N7cb73900
+push $N59337c00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_Q
+  fromInput2 {{0} B}
+  mappings "4 zcam_Q.red 0 0 rgba.red 0 0 zcam_Q.green 0 1 rgba.green 0 1 zcam_Q.blue 0 2 rgba.blue 0 2 zcam_Q.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle18
+  xpos -2182
+  ypos 2257
+ }
+ Dot {
+  name Dot21
+  label Q
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1996
+  ypos 2435
+ }
+set N59615400 [stack 0]
+push $N59337c00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_J
+  fromInput2 {{0} B}
+  mappings "4 zcam_J.red 0 0 rgba.red 0 0 zcam_J.green 0 1 rgba.green 0 1 zcam_J.blue 0 2 rgba.blue 0 2 zcam_J.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle14
+  xpos -2302
+  ypos 2259
+ }
+ Dot {
+  name Dot8
+  label J
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -2229
+  ypos 2434
+ }
+ Dot {
+  name Dot22
+  xpos -2229
+  ypos 2456
+ }
+set N984a2000 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 Constants.Qw*(r/100)
+  name Q_from_J
+  label "# Get Lightness J and brightness Q from data:"
+  xpos -2263
+  ypos 2519
+ }
+ Switch {
+  inputs 2
+  which {{parent.inverseData0}}
+  name InverseData0_Mode
+  label Q
+  xpos -2263
+  ypos 2564
+ }
+set N5967c800 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy30
+  xpos -1818
+  ypos 2676
+ }
+ Expression {
+  temp_name0 M
+  temp_expr0 "r * (g / Constants.FL**0.6 / 100)**2"
+  channel0 rgba
+  expr0 100*M/Constants.Qw
+  name C_from_aS
+  label "        if ('aS' in outin) | ('S' in outin):\n            M = Q * (MCs / FL**0.6 / 100)**2 \n            C = 100*M/Qw"
+  xpos -1818
+  ypos 2708
+ }
+push $N1f19cc00
+push $N59335400
+ Switch {
+  inputs 5
+  which {{parent.inverseData1}}
+  name inputdata_abX_mode1
+  xpos -1926
+  ypos 2799
  }
  Expression {
   channel0 rgba
@@ -942,7 +1359,7 @@ set N929ba800 [stack 0]
   name inv_M
   label "        #--------------------------------------------\n        # Calculate colorfulness, M:\n        M = Qw * C / 100\n        "
   xpos -1543
-  ypos 2808
+  ypos 2822
  }
  Copy {
   inputs 2
@@ -950,7 +1367,7 @@ set N929ba800 [stack 0]
   to0 rgba.green
   name Copy7
   xpos -1543
-  ypos 2860
+  ypos 2874
  }
  Expression {
   channel0 rgba
@@ -968,7 +1385,7 @@ set N929ba800 [stack 0]
   xpos -1543
   ypos 2986
  }
-set N929b9400 [stack 0]
+set N59334400 [stack 0]
  Expression {
   channel0 rgba
   expr0 r*sin(g*pi/180)
@@ -977,7 +1394,7 @@ set N929b9400 [stack 0]
   xpos -1402
   ypos 3067
  }
-push $N929b9400
+push $N59334400
  Expression {
   channel0 rgba
   expr0 r*cos(g*pi/180)
@@ -986,46 +1403,14 @@ push $N929b9400
   xpos -1543
   ypos 3064
  }
-push $Ncf9ecc00
- Shuffle2 {
-  fromInput1 {{0} B}
-  in1 zcam_J
-  fromInput2 {{0} B}
-  mappings "4 zcam_J.red 0 0 rgba.red 0 0 zcam_J.green 0 1 rgba.green 0 1 zcam_J.blue 0 2 rgba.blue 0 2 zcam_J.alpha 0 3 rgba.alpha 0 3"
-  name Shuffle14
-  xpos -2302
-  ypos 2259
- }
- Dot {
-  name Dot8
-  label J
-  note_font_size 20
-  note_font_color 0x677754ff
-  xpos -2268
-  ypos 2342
- }
- NoOp {
-  name inv_J
-  xpos -2220
-  ypos 2480
- }
-set Ncf97bc00 [stack 0]
- Expression {
-  channel0 rgba
-  expr0 Constants.Qw*(r/100)
-  name inv_Q
-  label "# Get Lightness J and brightness Q from data:"
-  xpos -2220
-  ypos 2555
- }
-set Ncf97b800 [stack 0]
+push $N5967c800
  Expression {
   channel0 rgba
   expr0 (r/(2700*(Constants.Fs**2.2)*(Constants.Fb**0.5)*(Constants.FL**0.2)))**((Constants.Fb**0.12)/(1.6*Constants.Fs))
   name inv_Iz
   label "# calculate achromatic signal, Iz:"
-  xpos -2220
-  ypos 2622
+  xpos -2263
+  ypos 2619
  }
  Copy {
   inputs 2
@@ -1060,7 +1445,7 @@ set Ncf97b800 [stack 0]
   xpos -2145
   ypos 3470
  }
-set N92947000 [stack 0]
+set N592c5000 [stack 0]
  Expression {
   expr0 "(r + 1.6295499532821566e-11)/(1 - 0.56*(1 - (r + 1.6295499532821566e-11)))"
   name Expression3
@@ -1068,7 +1453,7 @@ set N92947000 [stack 0]
   xpos -2050
   ypos 3532
  }
-push $N92947000
+push $N592c5000
  Switch {
   inputs 2
   name use_zcam_parameters2
@@ -1076,7 +1461,7 @@ push $N92947000
   xpos -2179
   ypos 3608
  }
-set N929e8100 [stack 0]
+set N5934b200 [stack 0]
  Dot {
   name Dot19
   label Iabz
@@ -1101,7 +1486,7 @@ set N929e8100 [stack 0]
   xpos -2126
   ypos 3750
  }
-push $N929e8100
+push $N5934b200
  Dot {
   name Dot18
   label Iabz
@@ -1175,7 +1560,7 @@ push $N929e8100
   addUserKnob {7 g}
   g 0.66
  }
-push $Ncf9ecc00
+push $N59337c00
  Switch {
   inputs 2
   which {{parent.direction}}
@@ -1188,8 +1573,26 @@ push $Ncf9ecc00
   xpos -1519
   ypos 4272
  }
-push $Ncf97b800
-push $Ncf9ecc00
+push $N59337c00
+ Dot {
+  name Dot11
+  label aM
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1535
+  ypos 2170
+ }
+push $N59337c00
+ Dot {
+  name Dot12
+  label bM
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1439
+  ypos 2173
+ }
+push $N5967c800
+push $N59337c00
  Shuffle2 {
   fromInput1 {{0} B}
   in1 zcam_Sz
@@ -1213,25 +1616,47 @@ push $Ncf9ecc00
   to0 rgba.green
   name Copy4
   xpos -1770
-  ypos 2535
+  ypos 2555
  }
  Expression {
   expr0 "(g / Constants.Qw) * Constants.MCs**2 / FL**1.2 / 100"
   name inv_C
   label "if ('Sz' in outin) | ('aSz' in outin):  # saturation"
   xpos -1770
-  ypos 2607
+  ypos 2587
  }
- Constant {
+push $N1f19dc00
+ Dot {
+  name Dot23
+  label "H in outIn"
+  xpos -1509
+  ypos 2582
+ }
+ Dot {
   inputs 0
-  channels rgb
-  color 4.9767
-  name Constant1
-  xpos 567
-  ypos 1001
+  name Dot32
+  label "H in outIn"
+  xpos -1108
+  ypos 2620
  }
-push $Ncf97bc00
-push $N929ba800
+push $N59615400
+ Expression {
+  channel0 rgba
+  expr0 "100.0* (r/Constants.Qw)"
+  name J_from_Q
+  xpos -2030
+  ypos 2479
+ }
+push $N984a2000
+ Switch {
+  inputs 2
+  which {{parent.inverseData0}}
+  name InverseData0_Mode1
+  label J
+  xpos -2030
+  ypos 2527
+ }
+push $N7cb73900
  Copy {
   inputs 2
   from0 rgba.green
@@ -1248,54 +1673,36 @@ push $N929ba800
   xpos -1596
   ypos 2713
  }
-push $Ncf97bc00
- Viewer {
-  inputs 2
-  frame_range 1-100
-  colour_sample_bbox {0.4580078125 -0.1640625 0.458984375 -0.1630859375}
-  viewerProcess "sRGB (default)"
-  name Viewer1
-  xpos -1766
-  ypos 2790
+ Constant {
+  inputs 0
+  channels rgb
+  color 0.034705
+  name Constant1
+  xpos -440
+  ypos 2450
  }
 end_group
-set N649c5d00 [stack 0]
-LayerContactSheet {
- width {{input.width*columns}}
- height {{input.height*rows}}
- rows 4
- autodims false
- showLayerNames true
- name LayerContactSheet1
- xpos 894
- ypos 41
-}
-push $N216d1400
-Colorspace {
- colorspace_in CIE-XYZ
- primary_out DCI-P3
- name Colorspace2
- label "XYZ to P3"
- xpos 896
- ypos -123
-}
-push $N649c5d00
+set N2aa21600 [stack 0]
 Grade {
  channels zcam_J
- multiply 0.82
- name Grade2
+ multiply 0.5
+ name Grade1
  xpos 705
- ypos 84
- disable true
+ ypos 86
 }
 Group {
  name ZCAM1
- label "\[value direction]\n0.0.1"
+ label "\[value direction]\n\[if \{\[value direction] ==\"inverse\"\} \{return \[value inverseData0]\} \{return  \"\"\}] - \[if \{\[value direction] ==\"inverse\"\} \{return \[value inverseData1]\} \{return  \"\"\}]\n0.0.2"
  xpos 705
- ypos 127
+ ypos 155
  addUserKnob {20 ZCAM}
  addUserKnob {4 direction M {forward inverse}}
  direction inverse
+ addUserKnob {26 ""}
+ addUserKnob {26 inverseModes l "Inverse Input Data Modes"}
+ addUserKnob {4 inverseData0 l "Inverse Data 0" M {J Q}}
+ addUserKnob {4 inverseData1 l "Inverse Data 1" M {aM,bM aC,bC aS,bS M,h C,h}}
+ inverseData1 C,h
  addUserKnob {26 ""}
  addUserKnob {26 _1 l _SURROUND_PARAMETERS}
  addUserKnob {41 surrounds T Constants.surrounds}
@@ -1353,8 +1760,8 @@ Group {
   note_font_size 42
   xpos -2310
   ypos 2374
-  bdwidth 1157
-  bdheight 936
+  bdwidth 1715
+  bdheight 953
  }
  BackdropNode {
   inputs 0
@@ -1393,7 +1800,7 @@ Group {
   xpos -950
   ypos -21
  }
-set N87c42400 [stack 0]
+set N1c481800 [stack 0]
  ColorMatrix {
   matrix {
       {{b} 0 {1-b}}
@@ -1434,7 +1841,7 @@ set N87c42400 [stack 0]
   name Expression1
   label "# response compression: lms to lms'"
   xpos -984
-  ypos 198
+  ypos 199
   addUserKnob {20 _PQ_PARAMETERS}
   addUserKnob {7 c1}
   c1 {{3424/2**12}}
@@ -1453,7 +1860,7 @@ set N87c42400 [stack 0]
   xpos -950
   ypos 260
  }
-set N87c41000 [stack 0]
+set N1c480400 [stack 0]
  ColorMatrix {
   matrix {
       {0 1 0}
@@ -1477,7 +1884,7 @@ set N87c41000 [stack 0]
   xpos -878
   ypos 411
  }
-push $N87c41000
+push $N1c480400
  ColorMatrix {
   matrix {
       {0.5 0.5 0}
@@ -1501,7 +1908,7 @@ push $N87c41000
   xpos -978
   ypos 441
  }
-set N8c97c100 [stack 0]
+set N36e2b200 [stack 0]
  Expression {
   expr0 "((1-0.56)*r/(1-0.56*r)) - 1.6295499532821566e-11"
   name Expression2
@@ -1509,7 +1916,7 @@ set N8c97c100 [stack 0]
   xpos -886
   ypos 492
  }
-push $N8c97c100
+push $N36e2b200
  Switch {
   inputs 2
   name use_zcam_parameters1
@@ -1523,7 +1930,7 @@ push $N8c97c100
   xpos -944
   ypos 753
  }
-set N8a1f3000 [stack 0]
+set N3680a400 [stack 0]
  Expression {
   temp_name0 r2d
   temp_expr0 180.0/pi
@@ -1537,7 +1944,7 @@ set N8a1f3000 [stack 0]
   xpos -1074
   ypos 904
  }
-set N8a1f2c00 [stack 0]
+set N3680a000 [stack 0]
  Expression {
   temp_name0 h
   temp_expr0 r
@@ -1547,7 +1954,7 @@ set N8a1f2c00 [stack 0]
   xpos -1074
   ypos 928
  }
-push $N8a1f3000
+push $N3680a400
  Copy {
   inputs 2
   from0 rgba.red
@@ -1564,7 +1971,7 @@ push $N8a1f3000
   xpos -894
   ypos 1021
  }
-set N8a1f2000 [stack 0]
+set N36809400 [stack 0]
  Expression {
   channel0 rgba
   expr0 100*r/Constants.Qw
@@ -1573,8 +1980,8 @@ set N8a1f2000 [stack 0]
   xpos -894
   ypos 1118
  }
-set N8a1f1c00 [stack 0]
-push $N8a1f3000
+set N36809000 [stack 0]
+push $N3680a400
  Expression {
   channel0 rgba
   expr0 "2700 * (r**(1.6*Constants.Fs/(Constants.Fb**0.12))) * (Constants.Fs**2.2) * (Constants.Fb**0.5) * (Constants.FL**0.2)"
@@ -1583,7 +1990,7 @@ push $N8a1f3000
   xpos -1030
   ypos 1019
  }
-set N8a1f1800 [stack 0]
+set N36808c00 [stack 0]
  Expression {
   channel0 rgba
   expr0 "100.0 * (r/Constants.Qw)"
@@ -1592,7 +1999,7 @@ set N8a1f1800 [stack 0]
   xpos -1030
   ypos 1117
  }
-set N8a1f1400 [stack 0]
+set N36808800 [stack 0]
  Copy {
   inputs 2
   from0 rgba.green
@@ -1601,7 +2008,7 @@ set N8a1f1400 [stack 0]
   xpos -1030
   ypos 1155
  }
-set N8a1f1000 [stack 0]
+set N36808400 [stack 0]
  Expression {
   channel0 rgba
   expr0 "100 - ((100-r)**2 + g**2)**0.5"
@@ -1610,7 +2017,7 @@ set N8a1f1000 [stack 0]
   xpos -1030
   ypos 1195
  }
-set N8a1f0c00 [stack 0]
+set N6b783c00 [stack 0]
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam
@@ -1620,7 +2027,7 @@ set N8a1f0c00 [stack 0]
   xpos -1202
   ypos 1199
  }
-push $N8a1f2c00
+push $N3680a000
  Dot {
   name Dot9
   label h
@@ -1629,25 +2036,7 @@ push $N8a1f2c00
   xpos -1975
   ypos 2339
  }
-push $N8a1f1400
- Grade {
-  multiply 0.5
-  name Grade2
-  xpos -1030
-  ypos 1314
-  disable true
- }
- ColorLookup {
-  lut {master {curve C -1.408769725 k x342.8180237 100 s0}
-    red {}
-    green {}
-    blue {}
-    alpha {}}
-  name ColorLookup1
-  xpos -1030
-  ypos 1338
- }
-push $N8a1f3000
+push $N3680a400
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -1656,7 +2045,7 @@ push $N8a1f3000
   xpos -1127
   ypos 835
  }
-push $N8a1f3000
+push $N3680a400
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -1665,7 +2054,7 @@ push $N8a1f3000
   xpos -978
   ypos 837
  }
-push $N8a1f3000
+push $N3680a400
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -1727,24 +2116,24 @@ push $N8a1f3000
   addUserKnob {7 Qw}
   Qw 185.85
  }
-push $N87c42400
-push $N8a1f2c00
-push $N8a1f2000
+push $N1c481800
+push $N3680a000
+push $N36809400
  Copy {
   inputs 2
   from0 rgba.green
   to0 rgba.green
   name Copy5
-  xpos -367
-  ypos 1141
+  xpos 67
+  ypos 1136
  }
-set N1e0d6400 [stack 0]
+set N6b782000 [stack 0]
  Expression {
   channel0 rgba
   expr0 r*sin(g*pi/180.0)
   name bM
-  xpos -271
-  ypos 1203
+  xpos 163
+  ypos 1202
  }
  Shuffle2 {
   fromInput1 {{0} B}
@@ -1752,16 +2141,16 @@ set N1e0d6400 [stack 0]
   fromInput2 {{0} B}
   mappings "4 rgba.red 0 0 zcam_bM.red 0 0 rgba.green 0 1 zcam_bM.green 0 1 rgba.blue 0 2 zcam_bM.blue 0 2 rgba.alpha 0 3 zcam_bM.alpha 0 3"
   name Shuffle11
-  xpos -1154
-  ypos 1398
+  xpos -752
+  ypos 1400
  }
-push $N1e0d6400
+push $N6b782000
  Expression {
   channel0 rgba
   expr0 r*cos(g*pi/180.0)
   name aM
-  xpos -367
-  ypos 1204
+  xpos 67
+  ypos 1203
  }
  Shuffle2 {
   fromInput1 {{0} B}
@@ -1769,10 +2158,116 @@ push $N1e0d6400
   fromInput2 {{0} B}
   mappings "4 rgba.red 0 0 zcam_aM.red 0 0 rgba.green 0 1 zcam_aM.green 0 1 rgba.blue 0 2 zcam_aM.blue 0 2 rgba.alpha 0 3 zcam_aM.alpha 0 3"
   name Shuffle10
-  xpos -1250
+  xpos -848
+  ypos 1400
+ }
+push $N3680a000
+push $N36809000
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy25
+  xpos -164
+  ypos 1149
+ }
+set N6b780c00 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r*sin(g*pi/180.0)
+  name bC
+  xpos -76
+  ypos 1207
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_bC
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_bC.red 0 0 rgba.green 0 1 zcam_bC.green 0 1 rgba.blue 0 2 zcam_bC.blue 0 2 rgba.alpha 0 3 zcam_bC.alpha 0 3"
+  name Shuffle25
+  xpos -949
+  ypos 1399
+ }
+push $N6b780c00
+ Expression {
+  channel0 rgba
+  expr0 r*cos(g*pi/180.0)
+  name aC
+  xpos -164
+  ypos 1207
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_aC
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_aC.red 0 0 rgba.green 0 1 zcam_aC.green 0 1 rgba.blue 0 2 zcam_aC.blue 0 2 rgba.alpha 0 3 zcam_aC.alpha 0 3"
+  name Shuffle24
+  xpos -1048
+  ypos 1397
+ }
+push $N3680a000
+push $N36808c00
+push $N36809400
+ Copy {
+  inputs 2
+  from1 rgba.green
+  to1 rgba.green
+  name Copy2
+  xpos -734
+  ypos 1076
+ }
+ Expression {
+  channel0 rgba
+  expr0 "100.0* ((r/g)**0.5) * (Constants.FL)**0.6"
+  name s
+  label "# calculate saturation, s:"
+  xpos -734
+  ypos 1118
+ }
+set N3f8c7000 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy24
+  xpos -381
+  ypos 1143
+ }
+set N3f8c6c00 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r*sin(g*pi/180.0)
+  name bS
+  xpos -287
+  ypos 1207
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_bS
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_bS.red 0 0 rgba.green 0 1 zcam_bS.green 0 1 rgba.blue 0 2 zcam_bS.blue 0 2 rgba.alpha 0 3 zcam_bS.alpha 0 3"
+  name Shuffle23
+  xpos -1150
   ypos 1398
  }
-push $N8a1f1000
+push $N3f8c6c00
+ Expression {
+  channel0 rgba
+  expr0 r*cos(g*pi/180.0)
+  name aS
+  xpos -381
+  ypos 1207
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 zcam_aS
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 zcam_aS.red 0 0 rgba.green 0 1 zcam_aS.green 0 1 rgba.blue 0 2 zcam_aS.blue 0 2 rgba.alpha 0 3 zcam_aS.alpha 0 3"
+  name Shuffle22
+  xpos -1254
+  ypos 1395
+ }
+push $N36808400
  Expression {
   channel0 rgba
   expr0 "((r - 58)**2 + 3.4*g**2)**0.5"
@@ -1790,25 +2285,7 @@ push $N8a1f1000
   xpos -1345
   ypos 1396
  }
-push $N8a1f1800
-push $N8a1f2000
- Copy {
-  inputs 2
-  from1 rgba.green
-  to1 rgba.green
-  name Copy2
-  xpos -734
-  ypos 1076
- }
- Expression {
-  channel0 rgba
-  expr0 "100.0* ((r/g)**0.5) * (Constants.FL)**0.6"
-  name s
-  label "# calculate saturation, s:"
-  xpos -734
-  ypos 1118
- }
-set N1e0d4400 [stack 0]
+push $N3f8c7000
  Expression {
   channel0 rgba
   name Sz
@@ -1825,7 +2302,7 @@ set N1e0d4400 [stack 0]
   xpos -1436
   ypos 1395
  }
-push $N8a1f1000
+push $N36808400
  Expression {
   channel0 rgba
   expr0 "100 - 0.8*(r**2 + 8*g**2)**0.5"
@@ -1843,7 +2320,7 @@ push $N8a1f1000
   xpos -1524
   ypos 1393
  }
-push $N8a1f0c00
+push $N6b783c00
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam_Wz
@@ -1853,7 +2330,7 @@ push $N8a1f0c00
   xpos -1613
   ypos 1393
  }
-push $N1e0d4400
+push $N3f8c7000
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam_s
@@ -1863,7 +2340,7 @@ push $N1e0d4400
   xpos -1708
   ypos 1392
  }
-push $N8a1f1c00
+push $N36809000
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam_C
@@ -1873,7 +2350,7 @@ push $N8a1f1c00
   xpos -1798
   ypos 1391
  }
-push $N8a1f1400
+push $N36808800
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam_J
@@ -1883,7 +2360,7 @@ push $N8a1f1400
   xpos -1900
   ypos 1390
  }
-push $N8a1f2000
+push $N36809400
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam_M
@@ -1893,7 +2370,7 @@ push $N8a1f2000
   xpos -1999
   ypos 1389
  }
-push $N8a1f1800
+push $N36808c00
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam_Q
@@ -1903,7 +2380,7 @@ push $N8a1f1800
   xpos -2089
   ypos 1391
  }
-push $N8a1f2c00
+push $N3680a000
  Shuffle2 {
   fromInput1 {{0} B}
   out1 zcam_h
@@ -1913,7 +2390,7 @@ push $N8a1f2c00
   xpos -2182
   ypos 1392
  }
-push $N87c42400
+push $N1c481800
  Dot {
   name Dot16
   xpos -2265
@@ -2013,10 +2490,46 @@ push $N87c42400
   inputs 2
   from0 -rgba.alpha
   to0 -rgba.alpha
+  channels zcam_aS
+  name Copy26
+  xpos -2302
+  ypos 1841
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_bS
+  name Copy27
+  xpos -2302
+  ypos 1883
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_aC
+  name Copy28
+  xpos -2302
+  ypos 1925
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels zcam_bC
+  name Copy29
+  xpos -2302
+  ypos 1963
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
   channels zcam_aM
   name Copy18
   xpos -2302
-  ypos 1841
+  ypos 2005
  }
  Copy {
   inputs 2
@@ -2025,65 +2538,113 @@ push $N87c42400
   channels zcam_bM
   name Copy19
   xpos -2302
-  ypos 1883
+  ypos 2047
  }
  Switch {
   inputs 2
   which {{parent.direction}}
   name direction1
   xpos -2302
-  ypos 2054
+  ypos 2112
  }
  Dot {
   name Dot17
   xpos -2268
   ypos 2157
  }
-set Nf24d9800 [stack 0]
+set N43441800 [stack 0]
  Shuffle2 {
   fromInput1 {{0} B}
-  in1 zcam_aM
+  in1 zcam_h
   fromInput2 {{0} B}
-  mappings "4 zcam_aM.red 0 0 rgba.red 0 0 zcam_aM.green 0 1 rgba.green 0 1 zcam_aM.blue 0 2 rgba.blue 0 2 zcam_aM.alpha 0 3 rgba.alpha 0 3"
-  name Shuffle16
-  xpos -1639
-  ypos 2252
+  mappings "4 zcam_h.red 0 0 rgba.red 0 0 zcam_h.green 0 1 rgba.green 0 1 zcam_h.blue 0 2 rgba.blue 0 2 zcam_h.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle20
+  xpos -1041
+  ypos 2260
  }
  Dot {
-  name Dot11
-  label aM
+  name Dot41
+  label h
   note_font_size 20
   note_font_color 0x677754ff
-  xpos -1605
-  ypos 2342
+  xpos -1007
+  ypos 2349
  }
-push $Nf24d9800
+ Dot {
+  name Dot33
+  label "h in outIn"
+  xpos -1007
+  ypos 2613
+ }
+set N43440c00 [stack 0]
+ Dot {
+  name Dot34
+  xpos -1007
+  ypos 2652
+ }
+push $N43440c00
+ Dot {
+  name Dot35
+  xpos -1034
+  ypos 2640
+ }
+push $N43441800
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_bS
+  fromInput2 {{0} B}
+  in2 zcam_aS
+  mappings "4 zcam_bS.blue 0 2 rgba.blue 0 2 zcam_bS.alpha 0 3 rgba.alpha 0 3 zcam_bS.green 0 1 rgba.green 0 1 zcam_aS.red 1 0 rgba.red 0 0"
+  name Shuffle16
+  label "aS & bS"
+  note_font_size 15
+  xpos -1489
+  ypos 2304
+ }
+push $N43441800
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_bC
+  fromInput2 {{0} B}
+  in2 zcam_aC
+  mappings "4 zcam_bC.blue 0 2 rgba.blue 0 2 zcam_bC.alpha 0 3 rgba.alpha 0 3 zcam_bC.green 0 1 rgba.green 0 1 zcam_aC.red 1 0 rgba.red 0 0"
+  name Shuffle17
+  label "aC & bC"
+  note_font_size 15
+  xpos -1585
+  ypos 2304
+ }
+push $N43441800
  Shuffle2 {
   fromInput1 {{0} B}
   in1 zcam_bM
   fromInput2 {{0} B}
-  mappings "4 zcam_bM.red 0 0 rgba.red 0 0 zcam_bM.green 0 1 rgba.green 0 1 zcam_bM.blue 0 2 rgba.blue 0 2 zcam_bM.alpha 0 3 rgba.alpha 0 3"
-  name Shuffle17
+  in2 zcam_aM
+  mappings "4 zcam_bM.blue 0 2 rgba.blue 0 2 zcam_bM.alpha 0 3 rgba.alpha 0 3 zcam_bM.green 0 1 rgba.green 0 1 zcam_aM.red 1 0 rgba.red 0 0"
+  name Shuffle26
+  label "aM & bM"
+  note_font_size 15
+  xpos -1682
+  ypos 2303
+ }
+ Switch {
+  inputs 3
+  which {{parent.inverseData1}}
+  name inputdata_abX_mode
   xpos -1543
-  ypos 2251
+  ypos 2400
  }
  Dot {
-  name Dot12
-  label bM
-  note_font_size 20
-  note_font_color 0x677754ff
+  name Dot30
   xpos -1509
-  ypos 2345
+  ypos 2449
  }
- Copy {
-  inputs 2
-  from0 rgba.red
-  to0 rgba.red
-  name Copy6
-  xpos -1543
-  ypos 2417
+set Nd3f77000 [stack 0]
+ Dot {
+  name Dot29
+  xpos -1210
+  ypos 2483
  }
-set Nf24d8400 [stack 0]
  Expression {
   temp_name0 r2d
   temp_expr0 180.0/pi
@@ -2096,39 +2657,280 @@ set Nf24d8400 [stack 0]
   name inv_h
   label "   # calculate hue h:\n            h = hue_angle(data\[...,1],data\[...,2], htype = 'deg')\n            print('h:'+str(h))"
   xpos -1244
-  ypos 2545
+  ypos 2546
  }
-set N7757fc00 [stack 0]
-push $N7757fc00
+ Dot {
+  name Dot36
+  label "a in outIn"
+  xpos -1210
+  ypos 2619
+ }
+set Nd3f76400 [stack 0]
+ Dot {
+  name Dot37
+  xpos -1163
+  ypos 2636
+ }
+push $Nd3f76400
+ Dot {
+  name Dot38
+  xpos -1185
+  ypos 2648
+ }
+push $Nd3f76400
+ Dot {
+  name Dot39
+  xpos -1210
+  ypos 2663
+ }
+ Switch {
+  inputs 5
+  which {{parent.inverseData1}}
+  name inverseData1_Mode1
+  label MCs
+  xpos -1116
+  ypos 2672
+ }
+ Dot {
+  name Dot40
+  xpos -1210
+  ypos 2719
+ }
+set Nd3f75400 [stack 0]
+push $Nd3f75400
  Expression {
   channel0 rgba
   expr0 "1.015 + cos((r + 89.038)*pi/180)"
   name inv_ez
   xpos -1244
-  ypos 2633
+  ypos 2756
  }
-push $Nf24d8400
+push $N43441800
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_C
+  fromInput2 {{0} B}
+  mappings "4 zcam_C.red 0 0 rgba.red 0 0 zcam_C.green 0 1 rgba.green 0 1 zcam_C.blue 0 2 rgba.blue 0 2 zcam_C.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle21
+  xpos -1357
+  ypos 2252
+ }
+ Dot {
+  name Dot42
+  label C
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1323
+  ypos 2341
+ }
+ Expression {
+  channel0 rgba
+  expr0 r
+  name MCs2
+  label "        elif 'h' in outin:\n            h = data\[...,2]\n            MCs = data\[...,1]  "
+  xpos -1357
+  ypos 2501
+ }
+ Dot {
+  name Dot43
+  label "h in outIn"
+  xpos -1323
+  ypos 2578
+ }
+push $N43441800
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_M
+  fromInput2 {{0} B}
+  mappings "4 zcam_M.red 0 0 rgba.red 0 0 zcam_M.green 0 1 rgba.green 0 1 zcam_M.blue 0 2 rgba.blue 0 2 zcam_M.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle19
+  xpos -1442
+  ypos 2252
+ }
+ Dot {
+  name Dot31
+  label M
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1408
+  ypos 2341
+ }
+ Expression {
+  channel0 rgba
+  expr0 r
+  name MCs1
+  label "        elif 'h' in outin:\n            h = data\[...,2]\n            MCs = data\[...,1]  "
+  xpos -1442
+  ypos 2501
+ }
+ Dot {
+  name Dot25
+  label "h in outIn"
+  xpos -1408
+  ypos 2575
+ }
+push $Nd3f77000
  Expression {
   channel0 rgba
   expr0 "(r**2.0 + g**2.0)**0.5"
   name MCs
   label "  if 'a' in outin\[1]: \n            # calculate hue h:\n            h = hue_angle(data\[...,1],data\[...,2], htype = 'deg')\n        \n            #--------------------------------------------\n            # calculate Colorfulness M or Chroma C or Saturation s from a,b:\n            MCs = (data\[...,1]**2.0 + data\[...,2]**2.0)**0.5  \n            print('MCs:'+str(MCs))"
-  xpos -1543
-  ypos 2546
+  xpos -1645
+  ypos 2460
  }
-set N7757f400 [stack 0]
  Dot {
-  name Dot20
-  xpos -1753
-  ypos 2679
+  name Dot24
+  label "a in outIn"
+  xpos -1611
+  ypos 2581
  }
+set N5c46e400 [stack 0]
+ Dot {
+  name Dot28
+  xpos -1564
+  ypos 2598
+ }
+push $N5c46e400
+ Dot {
+  name Dot27
+  xpos -1586
+  ypos 2610
+ }
+push $N5c46e400
+ Dot {
+  name Dot26
+  xpos -1611
+  ypos 2625
+ }
+ Switch {
+  inputs 5
+  which {{parent.inverseData1}}
+  name inverseData1_Mode
+  label MCs
+  xpos -1517
+  ypos 2634
+ }
+set N7270f200 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 r
+  name C_from_aC
+  label "        if ('aM' in outin) | ('M' in outin): \n            C = 100*MCs/Qw"
+  xpos -1926
+  ypos 2714
+ }
+set N5c46d400 [stack 0]
+ Dot {
+  name Dot44
+  label C,h
+  selected true
+  xpos -1673
+  ypos 2768
+ }
+push $N7270f200
  Expression {
   channel0 rgba
   expr0 100*r/Constants.Qw
-  name inv2_C
+  name C_from_aM
   label "        if ('aM' in outin) | ('M' in outin): \n            C = 100*MCs/Qw"
-  xpos -1787
-  ypos 2718
+  xpos -2036
+  ypos 2713
+ }
+set N5c46cc00 [stack 0]
+ Dot {
+  name Dot20
+  label M,h
+  selected true
+  xpos -1737
+  ypos 2767
+ }
+push $N7270f200
+push $N43441800
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_Q
+  fromInput2 {{0} B}
+  mappings "4 zcam_Q.red 0 0 rgba.red 0 0 zcam_Q.green 0 1 rgba.green 0 1 zcam_Q.blue 0 2 rgba.blue 0 2 zcam_Q.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle18
+  xpos -2182
+  ypos 2257
+ }
+ Dot {
+  name Dot21
+  label Q
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1996
+  ypos 2435
+ }
+set N3a7e3c00 [stack 0]
+push $N43441800
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 zcam_J
+  fromInput2 {{0} B}
+  mappings "4 zcam_J.red 0 0 rgba.red 0 0 zcam_J.green 0 1 rgba.green 0 1 zcam_J.blue 0 2 rgba.blue 0 2 zcam_J.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle14
+  xpos -2302
+  ypos 2259
+ }
+ Dot {
+  name Dot8
+  label J
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -2229
+  ypos 2434
+ }
+ Dot {
+  name Dot22
+  xpos -2229
+  ypos 2456
+ }
+set N3a7e3000 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 Constants.Qw*(r/100)
+  name Q_from_J
+  label "# Get Lightness J and brightness Q from data:"
+  xpos -2263
+  ypos 2519
+ }
+ Switch {
+  inputs 2
+  which {{parent.inverseData0}}
+  name InverseData0_Mode
+  label Q
+  xpos -2263
+  ypos 2564
+ }
+set N7270eb00 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Copy30
+  xpos -1818
+  ypos 2676
+ }
+ Expression {
+  temp_name0 M
+  temp_expr0 "r * (g / Constants.FL**0.6 / 100)**2"
+  channel0 rgba
+  expr0 100*M/Constants.Qw
+  name C_from_aS
+  label "        if ('aS' in outin) | ('S' in outin):\n            M = Q * (MCs / FL**0.6 / 100)**2 \n            C = 100*M/Qw"
+  xpos -1818
+  ypos 2708
+ }
+push $N5c46d400
+push $N5c46cc00
+ Switch {
+  inputs 5
+  which {{parent.inverseData1}}
+  name inputdata_abX_mode1
+  xpos -1926
+  ypos 2799
  }
  Expression {
   channel0 rgba
@@ -2136,7 +2938,7 @@ set N7757f400 [stack 0]
   name inv_M
   label "        #--------------------------------------------\n        # Calculate colorfulness, M:\n        M = Qw * C / 100\n        "
   xpos -1543
-  ypos 2808
+  ypos 2822
  }
  Copy {
   inputs 2
@@ -2144,7 +2946,7 @@ set N7757f400 [stack 0]
   to0 rgba.green
   name Copy7
   xpos -1543
-  ypos 2860
+  ypos 2874
  }
  Expression {
   channel0 rgba
@@ -2162,7 +2964,7 @@ set N7757f400 [stack 0]
   xpos -1543
   ypos 2986
  }
-set N7757dc00 [stack 0]
+set N3a7e1400 [stack 0]
  Expression {
   channel0 rgba
   expr0 r*sin(g*pi/180)
@@ -2171,7 +2973,7 @@ set N7757dc00 [stack 0]
   xpos -1402
   ypos 3067
  }
-push $N7757dc00
+push $N3a7e1400
  Expression {
   channel0 rgba
   expr0 r*cos(g*pi/180)
@@ -2180,46 +2982,14 @@ push $N7757dc00
   xpos -1543
   ypos 3064
  }
-push $Nf24d9800
- Shuffle2 {
-  fromInput1 {{0} B}
-  in1 zcam_J
-  fromInput2 {{0} B}
-  mappings "4 zcam_J.red 0 0 rgba.red 0 0 zcam_J.green 0 1 rgba.green 0 1 zcam_J.blue 0 2 rgba.blue 0 2 zcam_J.alpha 0 3 rgba.alpha 0 3"
-  name Shuffle14
-  xpos -2302
-  ypos 2259
- }
- Dot {
-  name Dot8
-  label J
-  note_font_size 20
-  note_font_color 0x677754ff
-  xpos -2268
-  ypos 2342
- }
- NoOp {
-  name inv_J
-  xpos -2220
-  ypos 2480
- }
-set N7757c800 [stack 0]
- Expression {
-  channel0 rgba
-  expr0 Constants.Qw*(r/100)
-  name inv_Q
-  label "# Get Lightness J and brightness Q from data:"
-  xpos -2220
-  ypos 2555
- }
-set N7757c400 [stack 0]
+push $N7270eb00
  Expression {
   channel0 rgba
   expr0 (r/(2700*(Constants.Fs**2.2)*(Constants.Fb**0.5)*(Constants.FL**0.2)))**((Constants.Fb**0.12)/(1.6*Constants.Fs))
   name inv_Iz
   label "# calculate achromatic signal, Iz:"
-  xpos -2220
-  ypos 2622
+  xpos -2263
+  ypos 2619
  }
  Copy {
   inputs 2
@@ -2254,7 +3024,7 @@ set N7757c400 [stack 0]
   xpos -2145
   ypos 3470
  }
-set N40496800 [stack 0]
+set Nc295f000 [stack 0]
  Expression {
   expr0 "(r + 1.6295499532821566e-11)/(1 - 0.56*(1 - (r + 1.6295499532821566e-11)))"
   name Expression3
@@ -2262,7 +3032,7 @@ set N40496800 [stack 0]
   xpos -2050
   ypos 3532
  }
-push $N40496800
+push $Nc295f000
  Switch {
   inputs 2
   name use_zcam_parameters2
@@ -2270,7 +3040,7 @@ push $N40496800
   xpos -2179
   ypos 3608
  }
-set N7ace0f00 [stack 0]
+set N7270dd00 [stack 0]
  Dot {
   name Dot19
   label Iabz
@@ -2295,7 +3065,7 @@ set N7ace0f00 [stack 0]
   xpos -2126
   ypos 3750
  }
-push $N7ace0f00
+push $N7270dd00
  Dot {
   name Dot18
   label Iabz
@@ -2369,7 +3139,7 @@ push $N7ace0f00
   addUserKnob {7 g}
   g 0.66
  }
-push $Nf24d9800
+push $N43441800
  Switch {
   inputs 2
   which {{parent.direction}}
@@ -2382,8 +3152,26 @@ push $Nf24d9800
   xpos -1519
   ypos 4272
  }
-push $N7757c400
-push $Nf24d9800
+push $N43441800
+ Dot {
+  name Dot11
+  label aM
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1535
+  ypos 2170
+ }
+push $N43441800
+ Dot {
+  name Dot12
+  label bM
+  note_font_size 20
+  note_font_color 0x677754ff
+  xpos -1439
+  ypos 2173
+ }
+push $N7270eb00
+push $N43441800
  Shuffle2 {
   fromInput1 {{0} B}
   in1 zcam_Sz
@@ -2407,25 +3195,47 @@ push $Nf24d9800
   to0 rgba.green
   name Copy4
   xpos -1770
-  ypos 2535
+  ypos 2555
  }
  Expression {
   expr0 "(g / Constants.Qw) * Constants.MCs**2 / FL**1.2 / 100"
   name inv_C
   label "if ('Sz' in outin) | ('aSz' in outin):  # saturation"
   xpos -1770
-  ypos 2607
+  ypos 2587
  }
- Constant {
+push $Nd3f77000
+ Dot {
+  name Dot23
+  label "H in outIn"
+  xpos -1509
+  ypos 2582
+ }
+ Dot {
   inputs 0
-  channels rgb
-  color 4.9767
-  name Constant1
-  xpos 567
-  ypos 1001
+  name Dot32
+  label "H in outIn"
+  xpos -1108
+  ypos 2620
  }
-push $N7757c800
-push $N7757f400
+push $N3a7e3c00
+ Expression {
+  channel0 rgba
+  expr0 "100.0* (r/Constants.Qw)"
+  name J_from_Q
+  xpos -2030
+  ypos 2479
+ }
+push $N3a7e3000
+ Switch {
+  inputs 2
+  which {{parent.inverseData0}}
+  name InverseData0_Mode1
+  label J
+  xpos -2030
+  ypos 2527
+ }
+push $N7270f200
  Copy {
   inputs 2
   from0 rgba.green
@@ -2442,15 +3252,13 @@ push $N7757f400
   xpos -1596
   ypos 2713
  }
-push $N7757c800
- Viewer {
-  inputs 2
-  frame_range 1-100
-  colour_sample_bbox {0.4580078125 -0.1640625 0.458984375 -0.1630859375}
-  viewerProcess "sRGB (default)"
-  name Viewer1
-  xpos -1766
-  ypos 2790
+ Constant {
+  inputs 0
+  channels rgb
+  color 0.034705
+  name Constant1
+  xpos -440
+  ypos 2450
  }
 end_group
 Multiply {
@@ -2458,15 +3266,35 @@ Multiply {
  name Multiply2
  label "Div by 100 to go from nits"
  xpos 705
- ypos 231
+ ypos 229
 }
 Colorspace {
  colorspace_in CIE-XYZ
  primary_out DCI-P3
  name Colorspace6
  label "XYZ to P3"
- xpos 891
- ypos 236
+ xpos 917
+ ypos 240
+}
+push $N2aa21600
+LayerContactSheet {
+ width {{input.width*columns}}
+ height {{input.height*rows}}
+ rows 5
+ autodims false
+ showLayerNames true
+ name LayerContactSheet1
+ xpos 912
+ ypos 13
+}
+push $N2a9c6000
+Colorspace {
+ colorspace_in CIE-XYZ
+ primary_out DCI-P3
+ name Colorspace2
+ label "XYZ to P3"
+ xpos 911
+ ypos -123
 }
 Read {
  inputs 0
@@ -2475,15 +3303,7 @@ Read {
  format "1920 1080 0 0 1920 1080 1 HD_1080"
  origset true
  name Read2
- xpos 806
- ypos -283
-}
-Constant {
- inputs 0
- channels rgb
- color {1 0.4 0.4 1}
- color_panelDropped true
- name Constant1
- xpos 595
- ypos -278
+ selected true
+ xpos 868
+ ypos -280
 }
